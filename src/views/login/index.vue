@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import { login } from '@/api/user'
 import { validUsername } from '@/utils/validate'
 
 export default {
@@ -105,16 +106,21 @@ export default {
         this.$refs.password.focus()
       })
     },
-    handleLogin() {
-      this.$refs.loginForm.validate(valid => {
+    handleLogin()  {
+      this.$refs.loginForm.validate(async valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
-            this.loading = false
-          }).catch(() => {
-            this.loading = false
-          })
+
+      await this.$store.dispatch('user/login')
+    
+          res=login1(this.loginForm)
+          console.log(res)
+          // this.$store.dispatch('user/login', this.loginForm).then(() => {
+          //   this.$router.push({ path: this.redirect || '/' })
+          //   this.loading = false
+          // }).catch(() => {
+          //   this.loading = false
+          // })
         } else {
           console.log('error submit!!')
           return false
