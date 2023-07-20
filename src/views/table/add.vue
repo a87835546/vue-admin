@@ -39,7 +39,7 @@ export default {
         title:'',
         desc: '',
         status:0,
-        category_id:''
+        category_id:0
       }
     }
   },
