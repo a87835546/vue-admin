@@ -59,14 +59,14 @@ export const constantRoutes = [
     path: '/example',
     component: Layout,
     redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'el-icon-s-help' },
+    name: '数据',
+    meta: { title: '数据', icon: 'el-icon-s-help' },
     children: [
       {
         path: 'table',
-        name: 'Table',
+        name: '视频数据',
         component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
+        meta: { title: '视频数据', icon: 'table' }
       },
       {
         path: 'tree',
@@ -78,7 +78,7 @@ export const constantRoutes = [
         path: 'menu',
         name: '目录分类',
         component: () => import('@/views/menu/index'),
-        meta: { title: '目录分类', icon: 'menu' }
+        meta: { title: '目录分类', icon: 'table' }
       }
     ]
   },
@@ -86,6 +86,9 @@ export const constantRoutes = [
   {
     path: '/form',
     component: Layout,
+    name: '录入信息',
+    redirect: '/form/index',
+    meta: { title: '录入信息', icon: 'el-icon-s-help' },
     children: [
       {
         path: 'index',
@@ -98,6 +101,12 @@ export const constantRoutes = [
         name: '添加目录',
         component: () => import('@/views/menu/add'),
         meta: { title: '添加目录', icon: 'form' }
+      },
+      {
+        path: 'add1',
+        name: '添加视频内容',
+        component: () => import('@/views/table/add'),
+        meta: { title: '添加视频内容', icon: 'form' }
       }
     ]
   },

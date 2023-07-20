@@ -30,3 +30,11 @@ export function deleteMune(data) {
     data
   })
 }
+
+export function addBillboard(data) {
+  return request({
+    url: '/billboard/insert',
+    method: 'post',
+    data
+  })
+}
