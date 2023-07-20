@@ -10,10 +10,9 @@ const service = axios.create({
   timeout: 5000 ,// request timeout
   headers: {
     'Content-Type': 'application/json',
-    "Access-Contorl-Allow-Origin":"*",
-    "X-Requested-With":"XMLHttpRequest"
+    "Access-Contorl-Allow-Origin":"*"
   },
-  
+
   withCredentials: false // 允许携带cookie
 })
 
