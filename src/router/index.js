@@ -68,12 +68,12 @@ export const constantRoutes = [
         component: () => import('@/views/table/index'),
         meta: { title: '视频数据', icon: 'table' }
       },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      },
+      // {
+      //   path: 'tree',
+      //   name: 'Tree',
+      //   component: () => import('@/views/tree/index'),
+      //   meta: { title: 'Tree', icon: 'tree' }
+      // },
       {
         path: 'menu',
         name: '目录分类',
@@ -82,7 +82,6 @@ export const constantRoutes = [
       }
     ]
   },
-
   {
     path: '/form',
     component: Layout,
@@ -90,12 +89,12 @@ export const constantRoutes = [
     redirect: '/form/index',
     meta: { title: '录入信息', icon: 'el-icon-s-help' },
     children: [
-      {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
-      },
+      // {
+      //   path: 'index',
+      //   name: 'Form',
+      //   component: () => import('@/views/form/index'),
+      //   meta: { title: 'Form', icon: 'form' }
+      // },
       {
         path: 'add',
         name: '添加目录',

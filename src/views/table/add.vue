@@ -11,7 +11,7 @@
         <el-input v-model="form.url" />
       </el-form-item>
       <el-form-item label="类别">
-        <el-input v-model="form.category_id" />
+        <el-input v-model="form.category_id" type="number"/>
       </el-form-item>
       <el-form-item label="状态">
         <el-select v-model="form.status" placeholder="选择状态">
