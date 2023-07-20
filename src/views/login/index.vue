@@ -53,8 +53,9 @@
 </template>
 
 <script>
-import { login } from '@/api/user'
+import { login,login1 } from '@/api/user'
 import { validUsername } from '@/utils/validate'
+
 
 export default {
   name: 'Login',
@@ -109,18 +110,15 @@ export default {
     handleLogin()  {
       this.$refs.loginForm.validate(async valid => {
         if (valid) {
-          this.loading = true
-
-      await this.$store.dispatch('user/login')
-    
-          res=login1(this.loginForm)
-          console.log(res)
-          // this.$store.dispatch('user/login', this.loginForm).then(() => {
-          //   this.$router.push({ path: this.redirect || '/' })
-          //   this.loading = false
-          // }).catch(() => {
-          //   this.loading = false
-          // })
+          this.loading = true    
+          
+          // login1(this.loginForm)
+          this.$store.dispatch('user/newlogin', this.loginForm).then(() => {
+            this.$router.push({ path: this.redirect || '/' })
+            this.loading = false
+          }).catch(() => {
+            this.loading = false
+          })
         } else {
           console.log('error submit!!')
           return false

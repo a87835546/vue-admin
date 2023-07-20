@@ -75,10 +75,10 @@ export const constantRoutes = [
         meta: { title: 'Tree', icon: 'tree' }
       },
       {
-        path: 'table1',
-        name: 'Table1',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table1', icon: 'table' }
+        path: 'menu',
+        name: '目录分类',
+        component: () => import('@/views/menu/index'),
+        meta: { title: '目录分类', icon: 'menu' }
       }
     ]
   },
@@ -92,6 +92,12 @@ export const constantRoutes = [
         name: 'Form',
         component: () => import('@/views/form/index'),
         meta: { title: 'Form', icon: 'form' }
+      },
+      {
+        path: 'add',
+        name: '添加目录',
+        component: () => import('@/views/menu/add'),
+        meta: { title: '添加目录', icon: 'form' }
       }
     ]
   },
