@@ -38,3 +38,11 @@ export function addBillboard(data) {
     data
   })
 }
+
+export function deleteBillboard(data) {
+  return request({
+    url: '/billboard/delete',
+    method: 'post',
+    data
+  })
+}

@@ -23,16 +23,37 @@
           {{ scope.row.url }}
         </template>
       </el-table-column>
-      <el-table-column label="category_id" width="110" align="center">
+      <el-table-column label="描述" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.desc }}
+        </template>
+      </el-table-column>
+      <el-table-column label="作者" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.author }}
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="category_id" width="110" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.category_id }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column class-name="status-col" label="Status" width="110" align="center">
         <template slot-scope="scope">
           {{ scope.row.status==1?"禁用":"正常" }}
         </template>
       </el-table-column>
+      <el-table-column label="操作">
+      <template slot-scope="scope">
+        <el-button
+          size="mini"
+          @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+        <el-button
+          size="mini"
+          type="danger"
+          @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+      </template>
+    </el-table-column>
       <el-table-column align="center" prop="created_at" label="Display_time" width="250">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
@@ -43,7 +64,7 @@
 </template>
 
 <script>
-import { getList } from '@/api/table'
+import { getList,deleteBillboard } from '@/api/table'
 
 export default {
   filters: {
@@ -72,6 +93,13 @@ export default {
         console.log(response)
         this.list = response.data
         this.listLoading = false
+      })
+    },
+    handleDelete(id,data){
+      console.log('id-->>'+id+'data--->>'+data)
+      deleteBillboard({'id':data.id}).then(response => {
+        console.log(response)
+        this.fetchData()
       })
     }
   }

@@ -13,6 +13,9 @@
       <el-form-item label="类别">
         <el-input v-model="form.category_id" type="number"/>
       </el-form-item>
+      <el-form-item label="作者">
+        <el-input v-model="form.author"/>
+      </el-form-item>
       <el-form-item label="状态">
         <el-select v-model="form.status" placeholder="选择状态">
           <el-option label="启用" :value=1 />
@@ -35,11 +38,11 @@ export default {
     return {
       form: {
         url: '',
-        role: 1,
         title:'',
         desc: '',
         status:0,
-        category_id:0
+        category_id:0,
+        author:''
       }
     }
   },

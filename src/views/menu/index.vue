@@ -97,7 +97,7 @@ export default {
     },
     handleDelete(id,data){
       console.log('id-->>'+id+'data--->>'+data)
-      deleteMune().then(response => {
+      deleteMune({'id':data.id}).then(response => {
         console.log(response)
         this.fetchData()
       })
