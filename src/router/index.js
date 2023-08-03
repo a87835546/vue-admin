@@ -68,12 +68,6 @@ export const constantRoutes = [
         component: () => import('@/views/table/index'),
         meta: { title: '视频数据', icon: 'table' }
       },
-      // {
-      //   path: 'tree',
-      //   name: 'Tree',
-      //   component: () => import('@/views/tree/index'),
-      //   meta: { title: 'Tree', icon: 'tree' }
-      // },
       {
         path: 'menu',
         name: '目录分类',
@@ -89,12 +83,6 @@ export const constantRoutes = [
     redirect: '/form/index',
     meta: { title: '录入信息', icon: 'el-icon-s-help' },
     children: [
-      // {
-      //   path: 'index',
-      //   name: 'Form',
-      //   component: () => import('@/views/form/index'),
-      //   meta: { title: 'Form', icon: 'form' }
-      // },
       {
         path: 'add',
         name: '添加目录',
@@ -109,7 +97,34 @@ export const constantRoutes = [
       }
     ]
   },
-
+  {
+    path: '/app',
+    component: Layout,
+    name: 'app 配置信息',
+    redirect: '/app/modify/tabbar',
+    meta: { title: 'app 配置信息', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'modify/tabbar',
+        name: '添加目录',
+        component: () => import('@/views/app-config/add'),
+        meta: { title: '修改tabBar', icon: 'form' }
+      },
+      {
+        path: 'index',
+        name: '所有的配置信息',
+        component: () => import('@/views/app-config/index'),
+        meta: { title: '所有的配置信息', icon: 'form' }
+      }
+      ,
+      {
+        path: 'list',
+        name: '所有的配置信息',
+        component: () => import('@/views/app-config/list'),
+        meta: { title: '所有的配置信息', icon: 'form' }
+      }
+    ]
+  },
   {
     path: '/nested',
     component: Layout,

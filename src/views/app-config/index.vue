@@ -1,5 +1,8 @@
 <template>
   <div class="app-container">
+
+    <el-button type="primary" size="small" @click="addItem">新增类型</el-button>
+
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -8,19 +11,14 @@
       fit
       highlight-current-row
     >
-      <el-table-column align="center" label="ID" width="95">
+      <el-table-column align="center" label="index" width="95">
         <template slot-scope="scope">
-          {{ scope.$index }}
+          {{ scope.row.index }}
         </template>
       </el-table-column>
       <el-table-column label="Title">
         <template slot-scope="scope">
           {{ scope.row.title }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Url">
-        <template slot-scope="scope">
-          {{ scope.row.url }}
         </template>
       </el-table-column>
       <el-table-column label="描述" align="center">
@@ -33,16 +31,6 @@
           {{ scope.row.author }}
         </template>
       </el-table-column>
-      <el-table-column label="封面图片" width="110" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.theme_url }}</span>
-        </template>
-      </el-table-column>
-      <!-- <el-table-column class-name="status-col" label="Status" width="60" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.status==1?"禁用":"正常" }}
-        </template>
-      </el-table-column> -->
       <el-table-column label="操作" width="100">
       <template slot-scope="scope">
         <el-button
@@ -54,17 +42,20 @@
           @click="handleDelete(scope.$index, scope.row)">删除</el-button>
       </template>
     </el-table-column>
-      <!-- <el-table-column align="center" prop="created_at" label="Display_time" width="250">
-        <template slot-scope="scope">
-          <span>{{ scope.row.created_at }}</span>
-        </template>
-      </el-table-column> -->
     </el-table>
+    <dialog-component
+        v-if="showDialog"
+        ref="dialogComponent"
+        :dialog-title="dialogTitle"
+        :item-info="tableItem"
+        @closeDialog="closeDialog"
+      ></dialog-component>
   </div>
 </template>
 
 <script>
-import { getList,deleteBillboard } from '@/api/table'
+import { configTabbarList,deletetype } from '@/api/app'
+import DialogComponent from "./content.vue";
 
 export default {
   filters: {
@@ -77,10 +68,18 @@ export default {
       return statusMap[status]
     }
   },
+  components: { DialogComponent },
   data() {
     return {
       list: null,
-      listLoading: true
+      listLoading: true,
+      showDialog:false,
+      dialogTitle: "添加数据",
+      tableItem: {
+          assetName:'',
+          assetClassifyId: "",
+          assetCount:''
+        },
     }
   },
   created() {
@@ -89,18 +88,24 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getList().then(response => {
+      configTabbarList().then(response => {
         console.log(response)
         this.list = response.data
         this.listLoading = false
       })
     },
     handleDelete(id,data){
-      console.log('id-->>'+id+'data--->>'+data)
-      deleteBillboard({'id':data.id}).then(response => {
+      console.log('id-->>'+data.id+'data--->>'+data)
+      deletetype({'id':data.id}).then(response => {
         console.log(response)
         this.fetchData()
       })
+    },
+    addItem(){
+      this.showDialog = true
+    },
+    closeDialog(){
+      this.showDialog = false
     }
   }
 }
