@@ -46,7 +46,7 @@ export default {
   props: {
     dialogTitle: {
       type: String,
-      default: "添加人员"
+      default: "添加新数据"
     },
     itemInfo: {
       type: Object,

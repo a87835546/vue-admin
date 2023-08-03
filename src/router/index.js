@@ -101,22 +101,22 @@ export const constantRoutes = [
     path: '/app',
     component: Layout,
     name: 'app 配置信息',
-    redirect: '/app/modify/tabbar',
+    redirect: '/app/list',
     meta: { title: 'app 配置信息', icon: 'el-icon-s-help' },
     children: [
-      {
-        path: 'modify/tabbar',
-        name: '添加目录',
-        component: () => import('@/views/app-config/add'),
-        meta: { title: '修改tabBar', icon: 'form' }
-      },
-      {
-        path: 'index',
-        name: '所有的配置信息',
-        component: () => import('@/views/app-config/index'),
-        meta: { title: '所有的配置信息', icon: 'form' }
-      }
-      ,
+      // {
+      //   path: 'modify/tabbar',
+      //   name: '添加目录',
+      //   component: () => import('@/views/app-config/add'),
+      //   meta: { title: '修改tabBar', icon: 'form' }
+      // },
+      // {
+      //   path: 'index',
+      //   name: '所有的配置信息',
+      //   component: () => import('@/views/app-config/index'),
+      //   meta: { title: '所有的配置信息', icon: 'form' }
+      // }
+      // ,
       {
         path: 'list',
         name: '所有的配置信息',

@@ -1,10 +1,13 @@
 <template>
     <div class="dialog-demo">
-      <el-button type="primary" size="small" @click="addItem">添加资产</el-button>
+      <el-button type="primary" size="small" @click="addItem">新加</el-button>
       <el-table
         v-loading="tableLoading"
         :data="tableData"
         style="width: 80%; margin-top: 20px;"
+        border
+      fit
+      highlight-current-row
       >
         <el-table-column prop="title" label="电影分类名称"></el-table-column>
         <el-table-column prop="index" label="排序索引"> </el-table-column>
@@ -51,7 +54,7 @@
         },
         tableLoading: false,
         showDialog: false,
-        dialogTitle: "添加人员",
+        dialogTitle: "添加新数据",
         tableData: [],
         tableItem: {
           title:'',
@@ -95,7 +98,7 @@
           assetClassifyId: '',
           assetCount:''
         };
-        this.dialogTitle = "添加资产";
+        this.dialogTitle = "添加新数据";
         this.showDialog = true;
         this.$nextTick(() => {
           this.$refs["dialogComponent"].showDialog = true;
@@ -106,7 +109,7 @@
         if(state==0){
           row.isDel=0
           this.tableItem = row;
-          this.dialogTitle = "编辑资产";
+          this.dialogTitle = "编辑数据";
           this.showDialog = true;
           this.$nextTick(() => {
               this.$refs["dialogComponent"].showDialog = true;

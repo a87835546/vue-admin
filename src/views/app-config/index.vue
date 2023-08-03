@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
 
-    <el-button type="primary" size="small" @click="addItem">新增类型</el-button>
+    <el-button type="primary" size="small" @click="addItem">添加新数据</el-button>
 
     <el-table
       v-loading="listLoading"
