@@ -1,5 +1,10 @@
 <template>
   <div class="app-container">
+    <el-row :gutter="20">
+      <el-col :span="6"><el-button type="primary" size="small" @click="addItem">新加</el-button></el-col>
+      <el-col :span="6"> <el-input v-model="title" label="搜索"></el-input></el-col>
+      <el-col :span="6"><el-button type="primary" size="small" @click="search">标题搜索</el-button></el-col>
+    </el-row>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -49,20 +54,27 @@
       <template slot-scope="scope">
         <el-button
           size="mini"
-          @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          @click="handleEdit(scope.row,0)">编辑</el-button>
         <el-button
           size="mini"
           type="danger"
-          @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          @click="handleEdit(scope.row,1)">删除</el-button>
       </template>
     </el-table-column>
     </el-table>
+    <dialog-component
+        v-if="showDialog"
+        ref="dialogComponent"
+        :dialog-title="dialogTitle"
+        :item-info="tableItem"
+        @closeDialog="closeDialog"
+      ></dialog-component>
   </div>
 </template>
 
 <script>
 import { getMuneList,deleteMune } from '@/api/table'
-
+import DialogComponent from "./content.vue";
 export default {
   filters: {
     statusFilter(status) {
@@ -74,10 +86,13 @@ export default {
       return statusMap[status]
     }
   },
+  components: { DialogComponent },
   data() {
     return {
       list: null,
-      listLoading: true
+      listLoading: true,
+      showDialog: false,
+      title:"",
     }
   },
   created() {
@@ -92,16 +107,80 @@ export default {
         this.listLoading = false
       })
     },
-    handleEdit(id,data){
-      console.log(data)
-    },
     handleDelete(id,data){
       console.log('id-->>'+id+'data--->>'+data)
       deleteMune({'id':data.id}).then(response => {
         console.log(response)
         this.fetchData()
       })
-    }
+    },
+    closeDialog(flag) {
+        if (flag) {
+          // 重新刷新表格内容
+          this.fetchData();
+        }
+        this.showDialog = false;
+      },
+    handleEdit(row,state) {
+      if(state==0){
+        row.isDel=0
+        row.is_add=false
+        this.tableItem = row;
+        this.dialogTitle = "编辑数据";
+        this.showDialog = true;
+        this.$nextTick(() => {
+            this.$refs["dialogComponent"].showDialog = true;
+        });
+      }else{
+          this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+            row.isDel=1
+            this.tableItem = row;
+
+            deleteBillboard({'id':row.id}).then(response => {
+              console.log(response)
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+                });
+              this.fetchData()
+            })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+      }
+    },
+    addItem() {
+        
+        this.tableItem = {
+          title:'',
+          role:0,
+          desc:"",
+          position:0,
+          is_add:true
+        };
+        this.dialogTitle = "添加新数据";
+        this.showDialog = true;
+        this.$nextTick(() => {
+          this.$refs["dialogComponent"].showDialog = true;
+        });
+      },
+      search(){
+        searchBillboardByTitle({'title':this.title}).then(response => {
+          console.log(response)
+          this.$message({
+            type: 'success',
+            message: '成功!'
+            });
+          this.fetchData()
+        })
+      }
   }
 }
 </script>

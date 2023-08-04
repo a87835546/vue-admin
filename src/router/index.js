@@ -73,58 +73,36 @@ export const constantRoutes = [
         name: '目录分类',
         component: () => import('@/views/menu/index'),
         meta: { title: '目录分类', icon: 'table' }
-      }
-    ]
-  },
-  {
-    path: '/form',
-    component: Layout,
-    name: '录入信息',
-    redirect: '/form/index',
-    meta: { title: '录入信息', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'add',
-        name: '添加目录',
-        component: () => import('@/views/menu/add'),
-        meta: { title: '添加目录', icon: 'form' }
       },
-      {
-        path: 'add1',
-        name: '添加视频内容',
-        component: () => import('@/views/table/add'),
-        meta: { title: '添加视频内容', icon: 'form' }
-      }
-    ]
-  },
-  {
-    path: '/app',
-    component: Layout,
-    name: 'app 配置信息',
-    redirect: '/app/list',
-    meta: { title: 'app 配置信息', icon: 'el-icon-s-help' },
-    children: [
-      // {
-      //   path: 'modify/tabbar',
-      //   name: '添加目录',
-      //   component: () => import('@/views/app-config/add'),
-      //   meta: { title: '修改tabBar', icon: 'form' }
-      // },
-      // {
-      //   path: 'index',
-      //   name: '所有的配置信息',
-      //   component: () => import('@/views/app-config/index'),
-      //   meta: { title: '所有的配置信息', icon: 'form' }
-      // }
-      // ,
       {
         path: 'list',
         name: '所有的配置信息',
         component: () => import('@/views/app-config/list'),
-        meta: { title: '所有的配置信息', icon: 'form' }
+        meta: { title: '所有的配置信息', icon: 'table' }
       }
     ]
   },
+  // {
+  //   path: '/form',
+  //   component: Layout,
+  //   name: '录入信息',
+  //   redirect: '/form/index',
+  //   meta: { title: '录入信息', icon: 'el-icon-s-help' },
+  //   children: [
+  //     {
+  //       path: 'add',
+  //       name: '添加目录',
+  //       component: () => import('@/views/menu/add'),
+  //       meta: { title: '添加目录', icon: 'form' }
+  //     },
+  //     {
+  //       path: 'add1',
+  //       name: '添加视频内容',
+  //       component: () => import('@/views/table/add'),
+  //       meta: { title: '添加视频内容', icon: 'form' }
+  //     }
+  //   ]
+  // },
   {
     path: '/nested',
     component: Layout,

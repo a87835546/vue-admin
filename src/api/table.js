@@ -22,7 +22,13 @@ export function addMune(data) {
     data
   })
 }
-
+export function updateMune(data) {
+  return request({
+    url: '/menu/update',
+    method: 'post',
+    data
+  })
+}
 export function deleteMune(data) {
   return request({
     url: '/menu/delete',
@@ -42,6 +48,21 @@ export function addBillboard(data) {
 export function deleteBillboard(data) {
   return request({
     url: '/billboard/delete',
+    method: 'post',
+    data
+  })
+}
+export function updateBillboard(data) {
+  return request({
+    url: '/billboard/update',
+    method: 'post',
+    data
+  })
+}
+
+export function searchBillboardByTitle(data) {
+  return request({
+    url: '/billboard/search',
     method: 'post',
     data
   })
