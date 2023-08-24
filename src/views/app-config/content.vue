@@ -12,17 +12,21 @@
         <el-form-item label="类型名称：" prop="title" required>
           <el-input v-model="formInfo.title"></el-input>
         </el-form-item>
-        <el-form-item label="排序索引：" prop="index" required>
-          <el-input type="number" v-model.number="formInfo.index"></el-input>
-
-          <!-- <el-select v-model="formInfo.index" placeholder="请选择分类"> -->
-            <!-- <el-option
-              v-for="item in options"
+        <el-form-item label="类型名称英语：" prop="title_en" required>
+          <el-input v-model="formInfo.title_en"></el-input>
+        </el-form-item>
+        <el-form-item v-if="showCategory" label="所属分类：" prop="super_title" required>
+          <el-select collapse-tags v-model="formInfo.super_title" placeholder="请选择分类">
+            <el-option
+              v-for="item in category"
               :key="item.id"
               :label="item.classifyType"
-              :value="item.id"
-            ></el-option> -->
-          <!-- </el-select> -->
+              :value="item.title"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="排序索引：" prop="index" required>
+          <el-input type="number" v-model.number="formInfo.index"></el-input>
         </el-form-item>
         <el-form-item label="描述：" prop="desc" required>
           <el-input v-model="formInfo.desc"></el-input>
@@ -39,7 +43,7 @@
 </template>
  
 <script>
-import { modifyConfig } from '@/api/app'
+import { modifyConfig,getCategoryList } from '@/api/app'
 
 export default {
   name: "DialogComponent",
@@ -53,7 +57,8 @@ export default {
       default: function() {
         return {};
       }
-    }
+    },
+    
   },
   data() {
     return {
@@ -70,18 +75,22 @@ export default {
       },
       options:[],
       showDialog: false,
-      formInfo: JSON.parse(JSON.stringify(this.itemInfo))
+      showCategory:false,
+      formInfo: JSON.parse(JSON.stringify(this.itemInfo)),
+      category:[]
     };
   },
   mounted() {
+    this.showCategory = this.itemInfo.super_title != ''
     this.getOpt();
   },
   methods: {
     //   获取下拉框
     getOpt() {
-      // this.getRequest("/asset/getTypeList", {}).then(res => {
-      //   this.options=res.obj
-      // });
+      getCategoryList().then(resp=>{
+        this.category = resp.data
+        console.log(resp.data)
+      });
     },
     // 保存操作
     submitForm(formName) {
@@ -89,13 +98,6 @@ export default {
       console.log("submit-->>>>",JSON.stringify(this.formInfo))
       that.$refs[formName].validate(valid => {
         if (valid) {
-          // that.postRequest("/asset/setAsset", that.formInfo).then(res => {
-          //       that.$message({
-          //           message: "操作成功！",
-          //           type: "success"
-          //       });
-          //       that.closeDialog(1);
-          // });
            modifyConfig(this.formInfo).then(response => {
               this.list = response.data
               this.listLoading = false

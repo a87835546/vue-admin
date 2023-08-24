@@ -10,7 +10,9 @@
       highlight-current-row
       >
         <el-table-column prop="title" label="电影分类名称"></el-table-column>
+        <el-table-column prop="title_en" label="电影分类名称en"> </el-table-column>
         <el-table-column prop="index" label="排序索引"> </el-table-column>
+        <el-table-column prop="super_title" label="所属分类"> </el-table-column>
         <el-table-column prop="desc" label="描述"> </el-table-column>
         <el-table-column label="操作" width="200">
           <template slot-scope="scope">
@@ -55,11 +57,15 @@
         tableLoading: false,
         showDialog: false,
         dialogTitle: "添加新数据",
+        showCategory:false,
         tableData: [],
         tableItem: {
           title:'',
           desc: "",
-          index:''
+          index:'',
+          id:'',
+          super_title:'',
+        
         },
       };
     },
@@ -77,20 +83,7 @@
       this.tableLoading=false
 
     },
-      // 获取表格数据
-      // fetchData() {
-      //   this.tableLoading = true;
-      //   const data={
-      //     page:this.queryParam.pageNo,
-      //     size:this.queryParam.pageSize
-      //   }
-        // this.getRequest("/asset/getAssetList", data).then(res => {
-        //   this.totalCount = res.total;
-        //   this.tableData = res.data;
-        //   this.tableLoading=false
-        // });
-      //   this.tableLoading=false
-      // },
+
       // 添加操作
       addItem() {
         this.tableItem = {

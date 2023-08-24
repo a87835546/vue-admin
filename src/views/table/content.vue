@@ -14,26 +14,41 @@
         </el-form-item>
         <el-form-item label="视频链接：" prop="url" required>
           <el-input v-model="formInfo.url"></el-input>
-
-          <!-- <el-select v-model="formInfo.index" placeholder="请选择分类"> -->
-            <!-- <el-option
-              v-for="item in options"
-              :key="item.id"
-              :label="item.classifyType"
-              :value="item.id"
-            ></el-option> -->
-          <!-- </el-select> -->
         </el-form-item>
         <el-form-item label="描述：" prop="desc" required>
           <el-input v-model="formInfo.desc"></el-input>
-
-          <!-- <el-input type="number" v-model.number="formInfo.desc" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"></el-input> -->
         </el-form-item>
       <el-form-item label="视频的缩略图链接：" prop="theme_url" >
         <el-input v-model="formInfo.theme_url"></el-input>
       </el-form-item>
-      <el-form-item label="视频的作者：" prop="author" >
-        <el-input v-model="formInfo.author"></el-input>
+      <el-form-item label="视频的作者：" prop="actor" >
+        <el-input v-model="formInfo.actor"></el-input>
+      </el-form-item>
+      <el-form-item label="视频的评分：" prop="actor" >
+        <el-input v-model="formInfo.rate"></el-input>
+      </el-form-item>
+      <el-form-item label="视频的年份：" prop="actor" >
+        <el-input v-model.number="formInfo.years"></el-input>
+      </el-form-item>
+      <el-form-item  label="视频的类型：" prop="types" >
+        <el-select multiple collapse-tags v-model="types" placeholder="请选择分类" @change="test">
+            <el-option
+              v-for="item in options"
+              :key="item.id"
+              :label="item.classifyType"
+              :value="item.title"
+            ></el-option>
+          </el-select>
+      </el-form-item>
+      <el-form-item  label="视频的分类：" prop="category" >
+        <el-select v-model="formInfo.category_id" placeholder="请选择分类">
+            <el-option
+              v-for="item in categories"
+              :key="item.id"
+              :label="item.classifyType"
+              :value="item.title"
+            ></el-option>
+          </el-select>
       </el-form-item>
         <el-form-item style="text-align: right;">
           <el-button type="primary" @click="submitForm('formInfo')">确定</el-button>
@@ -45,7 +60,7 @@
 </template>
  
 <script>
-import { addBillboard,updateBillboard } from '@/api/table'
+import { addBillboard,updateBillboard,getTypes,getCategories } from '@/api/table'
 
 export default {
   name: "DialogComponent",
@@ -75,19 +90,41 @@ export default {
           ],
       },
       options:[],
+      categories:[],
+      types:[],
+      category:"",
       showDialog: false,
       formInfo: JSON.parse(JSON.stringify(this.itemInfo))
     };
   },
   mounted() {
+    this.getCategory();
     this.getOpt();
+    this.parserSelect();
   },
   methods: {
+    parserSelect(){
+      console.log(this.formInfo.types )
+      this.types= this.formInfo.types.split(",")
+      console.log(this.types)
+    },
+    test(){
+      console.log(this.types)
+      this.formInfo.types = this.types.join(",")
+      console.log(this.formInfo.types )
+    },
     //   获取下拉框
     getOpt() {
-      // this.getRequest("/asset/getTypeList", {}).then(res => {
-      //   this.options=res.obj
-      // });
+      getTypes().then(resp=>{
+        this.options = resp.data
+        console.log(this.options)
+      })
+    },
+    getCategory(){
+      getCategories().then(resp=>{
+        this.categories = resp.data
+        console.log(this.categories)
+      })
     },
     // 保存操作
     submitForm(formName) {
@@ -106,7 +143,6 @@ export default {
                   that.closeDialog(1);
             })
         }else {
-          console.log("update")
           updateBillboard(this.formInfo).then(response => {
               this.list = response.data
               this.listLoading = false

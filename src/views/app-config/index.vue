@@ -21,6 +21,9 @@
           {{ scope.row.title }}
         </template>
       </el-table-column>
+      <el-form-item label="类型名称英语：" prop="title_en" required>
+          <el-input v-model="formInfo.title_en"></el-input>
+        </el-form-item>
       <el-table-column label="描述" align="center">
         <template slot-scope="scope">
           {{ scope.row.desc }}

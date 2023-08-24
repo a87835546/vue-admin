@@ -9,29 +9,21 @@
       @close="closeDialog(0)"
     >
       <el-form ref="formInfo" :rules="rules" :model="formInfo" class="demo-form-inline" label-width="100px">
-        <el-form-item label="分类标题：" prop="title" required>
+        <el-form-item label="类型名称：" prop="title" required>
           <el-input v-model="formInfo.title"></el-input>
         </el-form-item>
-        <el-form-item label="分类标题英语：" prop="title_en" required>
+        <el-form-item label="类型名称英语：" prop="title_en" required>
           <el-input v-model="formInfo.title_en"></el-input>
         </el-form-item>
-        <el-form-item label="分类描述：" prop="desc" required>
-          <el-input v-model="formInfo.desc"></el-input>
+        <el-form-item label="排序索引：" prop="index" required>
+          <el-input type="number" v-model.number="formInfo.index"></el-input>
 
-          <!-- <el-select v-model="formInfo.index" placeholder="请选择分类"> -->
-            <!-- <el-option
-              v-for="item in options"
-              :key="item.id"
-              :label="item.classifyType"
-              :value="item.id"
-            ></el-option> -->
-          <!-- </el-select> -->
         </el-form-item>
-        <el-form-item label="分类权限：" prop="role" required>
-          <el-input type="number" v-model.number="formInfo.role"></el-input>
+        <el-form-item label="描述：" prop="desc" required>
+          <el-input v-model="formInfo.desc"></el-input>
         </el-form-item>
-        <el-form-item label="分类位置：" prop="position" required>
-          <el-input type="number" v-model.number="formInfo.position"></el-input>
+        <el-form-item label="主类型：" prop="super_id" required>
+          <el-input type="number" v-model="formInfo.super_id"></el-input>
         </el-form-item>
         <el-form-item style="text-align: right;">
           <el-button type="primary" @click="submitForm('formInfo')">确定</el-button>
@@ -43,7 +35,7 @@
 </template>
  
 <script>
-import { addMune,updateMune } from '@/api/table'
+import { updateCategory,addCategory,getTypes,getCategories } from '@/api/table'
 
 export default {
   name: "DialogComponent",
@@ -73,19 +65,29 @@ export default {
           ],
       },
       options:[],
+      categories:[],
+      types:[],
       showDialog: false,
       formInfo: JSON.parse(JSON.stringify(this.itemInfo))
     };
   },
   mounted() {
+    this.getCategory();
     this.getOpt();
   },
   methods: {
     //   获取下拉框
     getOpt() {
-      // this.getRequest("/asset/getTypeList", {}).then(res => {
-      //   this.options=res.obj
-      // });
+      getTypes().then(resp=>{
+        this.options = resp.data
+        console.log(this.options)
+      })
+    },
+    getCategory(){
+      getCategories().then(resp=>{
+        this.categories = resp.data
+        console.log(this.categories)
+      })
     },
     // 保存操作
     submitForm(formName) {
@@ -93,28 +95,30 @@ export default {
       console.log("submit-->>>>",JSON.stringify(this.formInfo))
       that.$refs[formName].validate(valid => {
         if (valid) {
-            if (that.formInfo.is_add == true){
-              addMune(that.formInfo).then(response => {
-                that.list = response.data
-                that.listLoading = false
-                that.$message({
-                        message: "操作成功！",
-                        type: "success"
-                    });
-                    that.closeDialog(1);
-              })
-          }else {
-            console.log("update")
-            updateMune(that.formInfo).then(response => {
-              that.list = response.data
-              that.listLoading = false
-                that.$message({
-                        message: "操作成功！",
-                        type: "success"
-                    });
-                    that.closeDialog(1);
-              })
-          }
+          if (this.formInfo.is_add == true){
+            this.formInfo.types = JSON.stringify(this.types)
+            addCategory(this.formInfo).then(response => {
+              this.list = response.data
+              this.listLoading = false
+              that.$message({
+                      message: "操作成功！",
+                      type: "success"
+                  });
+                  that.closeDialog(1);
+            })
+        }else {
+          console.log("update",this.types.join(","))
+          this.formInfo.types =  this.types.join(",")
+          updateCategory(this.formInfo).then(response => {
+              this.list = response.data
+              this.listLoading = false
+              that.$message({
+                    message: "操作成功！",
+                    type: "success"
+                });
+                that.closeDialog(1);
+           })
+        }
           // 走保存请求
         } else {
           return false;

@@ -2,6 +2,13 @@ import request from '@/utils/request'
 
 export function configTabbarList(data) {
   return request({
+    url: '/category/list',
+    method: 'get',
+    data
+  })
+}
+export function getCategoryList(data) {
+  return request({
     url: '/category/app',
     method: 'get',
     data

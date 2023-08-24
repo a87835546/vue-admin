@@ -4,6 +4,9 @@
       <el-form-item label="Title">
         <el-input v-model="form.title" />
       </el-form-item>
+      <el-form-item label="TitleEN">
+        <el-input v-model="form.title_en" />
+      </el-form-item>
       <el-form-item label="Desc">
         <el-input v-model="form.desc" />
       </el-form-item>

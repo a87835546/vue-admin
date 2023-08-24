@@ -5,61 +5,30 @@
       <el-col :span="6"> <el-input v-model="title" label="搜索"></el-input></el-col>
       <el-col :span="6"><el-button type="primary" size="small" @click="search">标题搜索</el-button></el-col>
     </el-row>
+
     <el-table
-      v-loading="listLoading"
-      :data="list"
-      style="width: 100%; margin-top: 20px;"
-      element-loading-text="Loading"
-      border
-      fit
-      highlight-current-row
-    >
-      <el-table-column align="center" label="ID" width="95">
-        <template slot-scope="scope">
-          {{ scope.$index }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Title">
-        <template slot-scope="scope">
-          {{ scope.row.title }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Url">
-        <template slot-scope="scope">
-          {{ scope.row.url }}
-        </template>
-      </el-table-column>
-      <el-table-column label="描述" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.desc }}
-        </template>
-      </el-table-column>
-      <el-table-column label="作者" align="center" width="60">
-        <template slot-scope="scope">
-          {{ scope.row.actor }}
-        </template>
-      </el-table-column>
-      <el-table-column label="电影的年份" align="center" width="60">
-        <template slot-scope="scope">
-          {{ scope.row.years }}
-        </template>
-      </el-table-column>
-      <el-table-column label="电影的评分" align="center" width="60">
-        <template slot-scope="scope">
-          {{ scope.row.rate }}
-        </template>
-      </el-table-column>
-      <el-table-column label="封面图片" width="110" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.theme_url }}</span>
-        </template>
-      </el-table-column>
-      <!-- <el-table-column class-name="status-col" label="Status" width="60" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.status==1?"禁用":"正常" }}
-        </template>
-      </el-table-column> -->
-      <el-table-column label="操作" width="100">
+    :data="categories"
+    style="width: 100%"
+    row-key="id"
+    border
+    lazy
+    :load="load"
+    :tree-props="{children: 'children', hasChildren: 'index'}">
+    <el-table-column
+      prop="id"
+      label="日期"
+      width="180">
+    </el-table-column>
+    <el-table-column
+      prop="title"
+      label="姓名"
+      width="180">
+    </el-table-column>
+    <el-table-column
+      prop="index"
+      label="地址">
+    </el-table-column>
+    <el-table-column label="操作" width="150">
       <template slot-scope="scope">
         <el-button
           size="mini"
@@ -70,12 +39,8 @@
           @click="handleEdit( scope.row,1)">删除</el-button>
       </template>
     </el-table-column>
-      <!-- <el-table-column align="center" prop="created_at" label="Display_time" width="250">
-        <template slot-scope="scope">
-          <span>{{ scope.row.created_at }}</span>
-        </template>
-      </el-table-column> -->
-    </el-table>
+  </el-table>
+
     <dialog-component
         v-if="showDialog"
         ref="dialogComponent"
@@ -87,7 +52,8 @@
 </template>
 
 <script>
-import { getList,deleteBillboard,searchBillboardByTitle } from '@/api/table'
+import { getCategories,getSubCategories } from '@/api/table'
+
 import DialogComponent from "./content.vue";
 
 export default {
@@ -104,22 +70,67 @@ export default {
   components: { DialogComponent },
   data() {
     return {
-      list: null,
       listLoading: true,
       showDialog: false,
       title:null,
-    }
+      categories:[],
+      subcategories:[],
+
+        tableData1: [{
+          id: 1,
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }, {
+          id: 2,
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1517 弄'
+        }, {
+          id: 3,
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1519 弄',
+          hasChildren: true
+        }, {
+          id: 4,
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        }]
+      }
+    
   },
   created() {
-    this.fetchData()
+    this.getCategory()
   },
   methods: {
     fetchData() {
-      this.listLoading = true
-      getList().then(response => {
-        console.log(response)
-        this.list = response.data
+      this.getCategory();
+    },
+    getCategory(){
+      getCategories().then(resp=>{
+        this.categories = resp.data
+        this.categories.forEach((e,index) => {
+          if(e.super_id>0){
+            e.hasChildren= true
+            this.categories[index] = e
+          }
+        });
         this.listLoading = false
+        console.log("category--->>>",this.categories)
+
+      })
+    },
+    getSubCategory(id){
+      getSubCategories({'id':id}).then(resp=>{
+        console.log("sub category",id)
+        if(resp.data!=null){
+          this.subcategories = resp.data
+        }
+        this.listLoading = false
+        console.log("sub category--->>>",this.subcategories)
+
       })
     },
     handleDelete(id,data){
@@ -184,8 +195,7 @@ export default {
           actor:"",
           types:"",
           author:"admin",
-          is_add:true,
-          rate:0
+          is_add:true
         };
         this.dialogTitle = "添加新数据";
         this.showDialog = true;
@@ -202,7 +212,15 @@ export default {
             });
           this.fetchData()
         })
+      },
+      load(row, treeNode, resolve) {
+        this.getSubCategory(row.id)
+        console.log("id--->",this.subcategories)
+        setTimeout(() => {
+          resolve(this.subcategories)
+        }, 1000);
       }
+      
   }
 }
 </script>

@@ -9,30 +9,47 @@
       @close="closeDialog(0)"
     >
       <el-form ref="formInfo" :rules="rules" :model="formInfo" class="demo-form-inline" label-width="100px">
-        <el-form-item label="分类标题：" prop="title" required>
-          <el-input v-model="formInfo.title"></el-input>
+        <el-form-item label="明星名字：" prop="name" required>
+          <el-input v-model="formInfo.name"></el-input>
         </el-form-item>
-        <el-form-item label="分类标题英语：" prop="title_en" required>
-          <el-input v-model="formInfo.title_en"></el-input>
+        <el-form-item label="视明星英语名字：" prop="name_en" required>
+          <el-input v-model="formInfo.name_en"></el-input>
         </el-form-item>
-        <el-form-item label="分类描述：" prop="desc" required>
+        <!-- <el-form-item label="描述：" prop="desc" required>
           <el-input v-model="formInfo.desc"></el-input>
-
-          <!-- <el-select v-model="formInfo.index" placeholder="请选择分类"> -->
-            <!-- <el-option
+        </el-form-item> -->
+      <el-form-item label="明星头像：" prop="avatar_url" >
+        <el-input v-model="formInfo.avatar_url"></el-input>
+      </el-form-item>
+      <!-- <el-form-item label="视频的作者：" prop="actor" >
+        <el-input v-model="formInfo.actor"></el-input>
+      </el-form-item> -->
+      <!-- <el-form-item label="视频的评分：" prop="actor" >
+        <el-input v-model="formInfo.rate"></el-input>
+      </el-form-item>
+      <el-form-item label="视频的年份：" prop="actor" >
+        <el-input v-model.number="formInfo.years"></el-input>
+      </el-form-item>
+      <el-form-item  label="视频的类型：" prop="types" >
+        <el-select multiple collapse-tags v-model="types" placeholder="请选择分类" @change="test">
+            <el-option
               v-for="item in options"
               :key="item.id"
               :label="item.classifyType"
-              :value="item.id"
-            ></el-option> -->
-          <!-- </el-select> -->
-        </el-form-item>
-        <el-form-item label="分类权限：" prop="role" required>
-          <el-input type="number" v-model.number="formInfo.role"></el-input>
-        </el-form-item>
-        <el-form-item label="分类位置：" prop="position" required>
-          <el-input type="number" v-model.number="formInfo.position"></el-input>
-        </el-form-item>
+              :value="item.title"
+            ></el-option>
+          </el-select>
+      </el-form-item>
+      <el-form-item  label="视频的分类：" prop="category" >
+        <el-select v-model="formInfo.category_id" placeholder="请选择分类">
+            <el-option
+              v-for="item in categories"
+              :key="item.id"
+              :label="item.classifyType"
+              :value="item.title"
+            ></el-option>
+          </el-select>
+      </el-form-item> -->
         <el-form-item style="text-align: right;">
           <el-button type="primary" @click="submitForm('formInfo')">确定</el-button>
           <el-button @click="closeDialog(0)">取消</el-button>
@@ -43,7 +60,7 @@
 </template>
  
 <script>
-import { addMune,updateMune } from '@/api/table'
+import { addActor,updateActor } from '@/api/superstar'
 
 export default {
   name: "DialogComponent",
@@ -73,48 +90,44 @@ export default {
           ],
       },
       options:[],
+      categories:[],
+      types:[],
+      category:"",
       showDialog: false,
       formInfo: JSON.parse(JSON.stringify(this.itemInfo))
     };
   },
   mounted() {
-    this.getOpt();
   },
   methods: {
-    //   获取下拉框
-    getOpt() {
-      // this.getRequest("/asset/getTypeList", {}).then(res => {
-      //   this.options=res.obj
-      // });
-    },
+ 
     // 保存操作
     submitForm(formName) {
       const that = this;
       console.log("submit-->>>>",JSON.stringify(this.formInfo))
       that.$refs[formName].validate(valid => {
         if (valid) {
-            if (that.formInfo.is_add == true){
-              addMune(that.formInfo).then(response => {
-                that.list = response.data
-                that.listLoading = false
-                that.$message({
-                        message: "操作成功！",
-                        type: "success"
-                    });
-                    that.closeDialog(1);
-              })
-          }else {
-            console.log("update")
-            updateMune(that.formInfo).then(response => {
-              that.list = response.data
-              that.listLoading = false
-                that.$message({
-                        message: "操作成功！",
-                        type: "success"
-                    });
-                    that.closeDialog(1);
-              })
-          }
+          if (this.formInfo.is_add == true){
+            addActor(this.formInfo).then(response => {
+              this.list = response.data
+              this.listLoading = false
+              that.$message({
+                      message: "操作成功！",
+                      type: "success"
+                  });
+                  that.closeDialog(1);
+            })
+        }else {
+          updateActor(this.formInfo).then(response => {
+              this.list = response.data
+              this.listLoading = false
+              that.$message({
+                      message: "操作成功！",
+                      type: "success"
+                  });
+                  that.closeDialog(1);
+            })
+        }
           // 走保存请求
         } else {
           return false;

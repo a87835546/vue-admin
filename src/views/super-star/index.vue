@@ -19,47 +19,24 @@
           {{ scope.$index }}
         </template>
       </el-table-column>
-      <el-table-column label="Title">
+      <el-table-column label="名称">
         <template slot-scope="scope">
-          {{ scope.row.title }}
+          {{ scope.row.name }}
         </template>
       </el-table-column>
-      <el-table-column label="Url">
+      <el-table-column label="英语名称">
         <template slot-scope="scope">
-          {{ scope.row.url }}
+          {{ scope.row.name_en }}
         </template>
       </el-table-column>
-      <el-table-column label="描述" align="center">
+      <el-table-column label="头像">
         <template slot-scope="scope">
-          {{ scope.row.desc }}
+          {{ scope.row.avatar_url }}
         </template>
       </el-table-column>
-      <el-table-column label="作者" align="center" width="60">
-        <template slot-scope="scope">
-          {{ scope.row.actor }}
-        </template>
-      </el-table-column>
-      <el-table-column label="电影的年份" align="center" width="60">
-        <template slot-scope="scope">
-          {{ scope.row.years }}
-        </template>
-      </el-table-column>
-      <el-table-column label="电影的评分" align="center" width="60">
-        <template slot-scope="scope">
-          {{ scope.row.rate }}
-        </template>
-      </el-table-column>
-      <el-table-column label="封面图片" width="110" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.theme_url }}</span>
-        </template>
-      </el-table-column>
-      <!-- <el-table-column class-name="status-col" label="Status" width="60" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.status==1?"禁用":"正常" }}
-        </template>
-      </el-table-column> -->
-      <el-table-column label="操作" width="100">
+
+
+      <el-table-column label="操作" width="150">
       <template slot-scope="scope">
         <el-button
           size="mini"
@@ -70,11 +47,6 @@
           @click="handleEdit( scope.row,1)">删除</el-button>
       </template>
     </el-table-column>
-      <!-- <el-table-column align="center" prop="created_at" label="Display_time" width="250">
-        <template slot-scope="scope">
-          <span>{{ scope.row.created_at }}</span>
-        </template>
-      </el-table-column> -->
     </el-table>
     <dialog-component
         v-if="showDialog"
@@ -87,7 +59,7 @@
 </template>
 
 <script>
-import { getList,deleteBillboard,searchBillboardByTitle } from '@/api/table'
+import { getList } from '@/api/superstar'
 import DialogComponent from "./content.vue";
 
 export default {

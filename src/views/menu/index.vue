@@ -12,6 +12,9 @@
       border
       fit
       highlight-current-row
+      lazy
+      :load="load"
+      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
       <el-table-column align="center" label="ID" width="95">
         <template slot-scope="scope">
@@ -21,6 +24,11 @@
       <el-table-column label="Title">
         <template slot-scope="scope">
           {{ scope.row.title }}
+        </template>
+      </el-table-column>
+      <el-table-column label="TitleEN">
+        <template slot-scope="scope">
+          {{ scope.row.title_en }}
         </template>
       </el-table-column>
       <el-table-column label="Desc">
@@ -107,6 +115,7 @@ export default {
         this.listLoading = false
       })
     },
+    load(){},
     handleDelete(id,data){
       console.log('id-->>'+id+'data--->>'+data)
       deleteMune({'id':data.id}).then(response => {
@@ -163,7 +172,8 @@ export default {
           role:0,
           desc:"",
           position:0,
-          is_add:true
+          is_add:true,
+          title_en:''
         };
         this.dialogTitle = "添加新数据";
         this.showDialog = true;

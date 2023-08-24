@@ -67,3 +67,40 @@ export function searchBillboardByTitle(data) {
     data
   })
 }
+
+export function getTypes() {
+  return request({
+    url: '/type/list',
+    method: 'get'
+  })
+}
+
+export function getCategories(data) {
+  return request({
+    url: '/category/list',
+    method: 'post',
+    data
+  })
+}
+
+export function getSubCategories(data) {
+  return request({
+    url: '/category/queryList',
+    method: 'post',
+    data
+  })
+}
+export function addCategory(data) {
+  return request({
+    url: '/category/insert',
+    method: 'post',
+    data
+  })
+}
+export function updateCategory(data) {
+  return request({
+    url: '/category/update',
+    method: 'post',
+    data
+  })
+}
