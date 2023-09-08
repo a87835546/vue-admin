@@ -80,17 +80,23 @@ export const constantRoutes = [
         component: () => import('@/views/category/index'),
         meta: { title: '详细的分类配置', icon: 'table' }
       },
-      {
-        path: 'list',
-        name: '所有的配置信息',
-        component: () => import('@/views/app-config/list'),
-        meta: { title: '所有的配置信息', icon: 'table' }
-      },
+      // {
+      //   path: 'list',
+      //   name: '所有的配置信息',
+      //   component: () => import('@/views/app-config/list'),
+      //   meta: { title: '所有的配置信息', icon: 'table' }
+      // },
       {
         path: 'superstar',
         name: '所有的配置信息',
         component: () => import('@/views/super-star/index'),
         meta: { title: '明星数据', icon: 'table' }
+      },
+      {
+        path: 'banner',
+        name: 'Banner页面配置',
+        component: () => import('@/views/banner/index'),
+        meta: { title: 'Banner页面配置', icon: 'table' }
       }
     ]
   },
