@@ -48,8 +48,8 @@ const actions = {
       login1({ username: username.trim(), password: password }).then(response => {
         const { data } = response
         console.log(data)
-        commit('SET_TOKEN', data)
-        setToken(data)
+        commit('SET_TOKEN', data.token)
+        setToken(data.token)
         resolve()
       }).catch(error => {
         reject(error)

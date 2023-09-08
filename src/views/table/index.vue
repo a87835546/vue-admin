@@ -54,11 +54,6 @@
           <span>{{ scope.row.theme_url }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column class-name="status-col" label="Status" width="60" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.status==1?"禁用":"正常" }}
-        </template>
-      </el-table-column> -->
       <el-table-column label="操作" width="100">
       <template slot-scope="scope">
         <el-button
@@ -70,11 +65,6 @@
           @click="handleEdit( scope.row,1)">删除</el-button>
       </template>
     </el-table-column>
-      <!-- <el-table-column align="center" prop="created_at" label="Display_time" width="250">
-        <template slot-scope="scope">
-          <span>{{ scope.row.created_at }}</span>
-        </template>
-      </el-table-column> -->
     </el-table>
     <dialog-component
         v-if="showDialog"
@@ -182,10 +172,10 @@ export default {
           desc:"",
           category:"",
           actor:"",
-          types:"",
+          types:null,
           author:"admin",
           is_add:true,
-          rate:0
+          rate:"0.0"
         };
         this.dialogTitle = "添加新数据";
         this.showDialog = true;

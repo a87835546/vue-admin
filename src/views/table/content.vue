@@ -31,7 +31,7 @@
         <el-input v-model.number="formInfo.years"></el-input>
       </el-form-item>
       <el-form-item  label="视频的类型：" prop="types" >
-        <el-select multiple collapse-tags v-model="types" placeholder="请选择分类" @change="test">
+        <el-select multiple collapse-tags v-model="types" placeholder="例如动作，剧情" @change="test">
             <el-option
               v-for="item in options"
               :key="item.id"
@@ -41,7 +41,7 @@
           </el-select>
       </el-form-item>
       <el-form-item  label="视频的分类：" prop="category" >
-        <el-select v-model="formInfo.category_id" placeholder="请选择分类">
+        <el-select v-model="formInfo.category_id" placeholder="例如电视剧，电影">
             <el-option
               v-for="item in categories"
               :key="item.id"
@@ -60,7 +60,7 @@
 </template>
  
 <script>
-import { addBillboard,updateBillboard,getTypes,getCategories } from '@/api/table'
+import { addBillboard,updateBillboard,getCategories,getMuneList } from '@/api/table'
 
 export default {
   name: "DialogComponent",
@@ -90,7 +90,7 @@ export default {
           ],
       },
       options:[],
-      categories:[],
+      categories:null,
       types:[],
       category:"",
       showDialog: false,
@@ -105,7 +105,9 @@ export default {
   methods: {
     parserSelect(){
       console.log(this.formInfo.types )
+      this.formInfo.types.trim()
       this.types= this.formInfo.types.split(",")
+      delete this.types[0]
       console.log(this.types)
     },
     test(){
@@ -115,14 +117,18 @@ export default {
     },
     //   获取下拉框
     getOpt() {
-      getTypes().then(resp=>{
+      getCategories().then(resp=>{
         this.options = resp.data
         console.log(this.options)
       })
     },
     getCategory(){
-      getCategories().then(resp=>{
-        this.categories = resp.data
+      getMuneList().then(resp=>{
+        if(resp.data == []){
+          this.categories = null
+        }else{
+          this.categories = resp.data
+        }
         console.log(this.categories)
       })
     },

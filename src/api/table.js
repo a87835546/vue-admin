@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getList(params) {
   return request({
-    url: '/billboard/list',
+    url: '/videos/list',
     method: 'get',
     params
   })
@@ -39,7 +39,7 @@ export function deleteMune(data) {
 
 export function addBillboard(data) {
   return request({
-    url: '/billboard/insert',
+    url: '/videos/insert',
     method: 'post',
     data
   })
@@ -47,14 +47,14 @@ export function addBillboard(data) {
 
 export function deleteBillboard(data) {
   return request({
-    url: '/billboard/delete',
+    url: '/videos/delete',
     method: 'post',
     data
   })
 }
 export function updateBillboard(data) {
   return request({
-    url: '/billboard/update',
+    url: '/videos/update',
     method: 'post',
     data
   })
@@ -62,11 +62,12 @@ export function updateBillboard(data) {
 
 export function searchBillboardByTitle(data) {
   return request({
-    url: '/billboard/search',
+    url: '/videos/search',
     method: 'post',
     data
   })
 }
+
 
 export function getTypes() {
   return request({
@@ -75,11 +76,10 @@ export function getTypes() {
   })
 }
 
-export function getCategories(data) {
+export function getCategories() {
   return request({
     url: '/category/list',
-    method: 'post',
-    data
+    method: 'get',
   })
 }
 
