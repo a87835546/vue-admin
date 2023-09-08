@@ -9,6 +9,13 @@ export function getList(params) {
 }
 export function getMuneList(params) {
   return request({
+    url: '/menu/all',
+    method: 'get',
+    params
+  })
+}
+export function getMuneListById(params) {
+  return request({
     url: '/menu/list',
     method: 'get',
     params

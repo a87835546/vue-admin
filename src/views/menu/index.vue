@@ -2,6 +2,9 @@
   <div class="app-container">
     <el-row :gutter="20">
       <el-col :span="6"><el-button type="primary" size="small" @click="addItem">新加</el-button></el-col>
+      <el-select multiple v-model="selectedOption" collapse-tags @change="selected">
+        <el-option v-for="option in options" :key="option.id" :label="option.desc" :value="option.id"></el-option>
+      </el-select>
       <el-col :span="6"> <el-input v-model="title" label="搜索"></el-input></el-col>
       <el-col :span="6"><el-button type="primary" size="small" @click="search">标题搜索</el-button></el-col>
     </el-row>
@@ -18,7 +21,7 @@
     >
       <el-table-column align="center" label="ID" width="95">
         <template slot-scope="scope">
-          {{ scope.$index }}
+          {{ scope.row.id }}
         </template>
       </el-table-column>
       <el-table-column label="Title">
@@ -81,7 +84,7 @@
 </template>
 
 <script>
-import { getMuneList,deleteMune } from '@/api/table'
+import { getMuneList,deleteMune,getMuneListById } from '@/api/table'
 import DialogComponent from "./content.vue";
 export default {
   filters: {
@@ -101,10 +104,13 @@ export default {
       listLoading: true,
       showDialog: false,
       title:"",
+      selectedOption:[],
+      options:[]
     }
   },
   created() {
     this.fetchData()
+    this.load()
   },
   methods: {
     fetchData() {
@@ -115,7 +121,25 @@ export default {
         this.listLoading = false
       })
     },
-    load(){},
+    load(){
+      getMuneListById({"id":0}).then(response => {
+        console.log(response)
+        this.options = response.data
+        this.listLoading = false
+      })
+    },
+    selected(val){
+      var temp = []
+      val.forEach(e => {
+        temp.push(e)
+      });
+      console.log(temp)
+      getMuneListById({"id":val.toString()}).then(response => {
+        console.log(response)
+        this.list = response.data
+        this.listLoading = false
+      })
+    },
     handleDelete(id,data){
       console.log('id-->>'+id+'data--->>'+data)
       deleteMune({'id':data.id}).then(response => {
