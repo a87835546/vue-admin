@@ -22,7 +22,7 @@
           {{ scope.row.id }}
         </template>
       </el-table-column>
-      <el-table-column label="Title">
+      <el-table-column label="标题">
         <template slot-scope="scope">
           {{ scope.row.title }}
         </template>
@@ -37,19 +37,19 @@
           {{ scope.row.desc }}
         </template>
       </el-table-column>
-      <el-table-column label="Role" width="110" align="center">
+      <el-table-column label="封面url" width="110" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.role}}</span>
+          <span>{{ scope.row.theme_url}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Position" width="110" align="center">
+      <el-table-column label="视频链接" width="110" align="center">
         <template slot-scope="scope">
-          {{ scope.row.position}}
+          {{ scope.row.video_url}}
         </template>
       </el-table-column>
       <el-table-column class-name="status-col" label="图片url" width="110" align="center">
         <template slot-scope="scope">
-          {{ scope.row.status}}
+          {{ scope.row.status==1?"禁用":"正常" }}
         </template>
       </el-table-column>
       <el-table-column align="center" prop="created_at" label="Display_time" width="200">
@@ -82,7 +82,9 @@
 </template>
 
 <script>
-import { getMuneList,deleteMune,getMuneListById } from '@/api/table'
+import { getMuneList,getBannerList } from '@/api/table'
+import { mapGetters } from 'vuex'
+
 import DialogComponent from "./content.vue";
 export default {
   filters: {
@@ -96,6 +98,11 @@ export default {
     }
   },
   components: { DialogComponent },
+  computed: {
+    ...mapGetters([
+      'name'
+    ])
+  },
   data() {
     return {
       list: null,
@@ -113,14 +120,14 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getMuneList().then(response => {
+      getBannerList().then(response => {
         console.log(response)
         this.list = response.data
         this.listLoading = false
       })
     },
     load(){
-      getMuneListById({"id":0}).then(response => {
+      getMuneList().then(response => {
         console.log(response)
         this.options = response.data
         this.listLoading = false
@@ -191,11 +198,13 @@ export default {
         
         this.tableItem = {
           title:'',
-          role:0,
           desc:"",
-          position:0,
+          video_url:'',
+          video_theme_url:'',
           is_add:true,
-          title_en:''
+          title_en:'',
+          menu_id:0,
+          operation:name
         };
         this.dialogTitle = "添加新数据";
         this.showDialog = true;

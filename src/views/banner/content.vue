@@ -12,43 +12,22 @@
         <el-form-item label="视频标题：" prop="title" required>
           <el-input v-model="formInfo.title"></el-input>
         </el-form-item>
-        <el-form-item label="视频链接：" prop="url" required>
-          <el-input v-model="formInfo.url"></el-input>
+        <el-form-item label="视频链接：" prop="video_url" required>
+          <el-input v-model="formInfo.video_url"></el-input>
         </el-form-item>
         <el-form-item label="描述：" prop="desc" required>
           <el-input v-model="formInfo.desc"></el-input>
         </el-form-item>
       <el-form-item label="视频的缩略图链接：" prop="theme_url" >
-        <el-input v-model="formInfo.theme_url"></el-input>
+        <el-input v-model="formInfo.video_theme_url"></el-input>
       </el-form-item>
-      <el-form-item label="视频的作者：" prop="actor" >
-        <el-input v-model="formInfo.actor"></el-input>
+      <el-form-item label="视频标题英语：" prop="actor" >
+        <el-input v-model="formInfo.titile_en"></el-input>
       </el-form-item>
-      <el-form-item label="视频的评分：" prop="actor" >
-        <el-input v-model="formInfo.rate"></el-input>
-      </el-form-item>
-      <el-form-item label="视频的年份：" prop="actor" >
-        <el-input v-model.number="formInfo.years"></el-input>
-      </el-form-item>
-      <el-form-item  label="视频的类型：" prop="types" >
-        <el-select multiple collapse-tags v-model="types" placeholder="例如动作，剧情" @change="test">
-            <el-option
-              v-for="item in options"
-              :key="item.id"
-              :label="item.classifyType"
-              :value="item.title"
-            ></el-option>
-          </el-select>
-      </el-form-item>
-      <el-form-item  label="视频的分类：" prop="category" >
-        <el-select v-model="formInfo.category_id" placeholder="例如电视剧，电影">
-            <el-option
-              v-for="item in categories"
-              :key="item.id"
-              :label="item.classifyType"
-              :value="item.title"
-            ></el-option>
-          </el-select>
+      <el-form-item label="所属目录：" prop="menu_id" required>
+          <el-select v-model="selectedOption" collapse-tags @change="selected">
+        <el-option v-for="option in options" :key="option.id" :label="option.title" :value="option.id"></el-option>
+        </el-select>
       </el-form-item>
         <el-form-item style="text-align: right;">
           <el-button type="primary" @click="submitForm('formInfo')">确定</el-button>
@@ -60,7 +39,7 @@
 </template>
  
 <script>
-import { addBillboard,updateBillboard,getCategories,getMuneList } from '@/api/table'
+import { addBanner,updateBanner,getCategories,getMuneList } from '@/api/table'
 
 export default {
   name: "DialogComponent",
@@ -90,6 +69,7 @@ export default {
           ],
       },
       options:[],
+      selectedOption:0,
       categories:null,
       types:[],
       category:"电影",
@@ -99,10 +79,22 @@ export default {
   },
   mounted() {
     this.getCategory();
+    this.getCategory();
     this.getOpt();
     this.parserSelect();
   },
   methods: {
+    getMuneList(){
+      getMuneList().then(resp=>{
+        this.options = resp.data
+        console.log(this.options)
+      })
+    },
+    selected(val){
+      this.selectedOption = val
+      this.formInfo.menu_id = val
+      console.log("catagory selected value"+val)
+    },
     parserSelect(){
       console.log(this.formInfo.types )
       this.formInfo.types.trim()
@@ -139,7 +131,7 @@ export default {
       that.$refs[formName].validate(valid => {
         if (valid) {
           if (this.formInfo.is_add == true){
-            addBillboard(this.formInfo).then(response => {
+            addBanner(this.formInfo).then(response => {
               this.list = response.data
               this.listLoading = false
               that.$message({
@@ -149,7 +141,7 @@ export default {
                   that.closeDialog(1);
             })
         }else {
-          updateBillboard(this.formInfo).then(response => {
+          updateBanner(this.formInfo).then(response => {
               this.list = response.data
               this.listLoading = false
               that.$message({

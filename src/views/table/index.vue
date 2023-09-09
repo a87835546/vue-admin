@@ -175,7 +175,8 @@ export default {
           types:null,
           author:"admin",
           is_add:true,
-          rate:"0.0"
+          rate:"0.0",
+          menu_title:""
         };
         this.dialogTitle = "添加新数据";
         this.showDialog = true;

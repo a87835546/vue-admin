@@ -40,12 +40,12 @@
             ></el-option>
           </el-select>
       </el-form-item>
-      <el-form-item  label="视频的分类：" prop="category" >
-        <el-select v-model="formInfo.category_id" placeholder="例如电视剧，电影">
+      <el-form-item  label="视频的分类：" prop="menu"  >
+        <el-select v-model="formInfo.category_id" placeholder="例如电视剧，电影"  @change="changedMenu">
             <el-option
               v-for="item in categories"
               :key="item.id"
-              :label="item.classifyType"
+              :label="item.title"
               :value="item.title"
             ></el-option>
           </el-select>
@@ -60,7 +60,7 @@
 </template>
  
 <script>
-import { addBillboard,updateBillboard,getCategories,getMuneList } from '@/api/table'
+import { addBillboard,updateBillboard,getMuneList } from '@/api/table'
 import { getTypes } from '@/api/table'
 
 export default {
@@ -114,7 +114,11 @@ export default {
     test(val){
       console.log(val)
       this.formInfo.types = this.types.join(",")
-      console.log(this.formInfo.types )
+      this.formInfo.category_id = val.toString()
+    },
+    changedMenu(val){
+      console.log("changed menu -->>",val)
+      this.formInfo.menu_title = val
     },
     //   获取下拉框
     getOpt() {

@@ -111,3 +111,29 @@ export function updateCategory(data) {
     data
   })
 }
+export function getBannerList() {
+  return request({
+    url: '/banner/list',
+    method: 'get'
+  })
+}
+export function getBannersByMenuId(data) {
+  return request({
+    url: '/banner/queryByMenuId?menu_id='+data,
+    method: 'get'
+  })
+}
+export function addBanner(data) {
+  return request({
+    url: '/banner/add',
+    method: 'post',
+    data
+  })
+}
+export function updateBanner(data) {
+  return request({
+    url: '/banner/update',
+    method: 'post',
+    data
+  })
+}
