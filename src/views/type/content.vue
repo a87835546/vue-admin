@@ -15,18 +15,6 @@
         <el-form-item label="类型名称英语：" prop="title_en" required>
           <el-input v-model="formInfo.title_en"></el-input>
         </el-form-item>
-        <el-form-item label="排序索引：" prop="index" required>
-          <el-input type="number" v-model.number="formInfo.index"></el-input>
-
-        </el-form-item>
-        <el-form-item label="描述：" prop="desc" required>
-          <el-input v-model="formInfo.desc"></el-input>
-        </el-form-item>
-        <el-form-item label="所属目录：" prop="menu_id" required>
-          <el-select v-model="selectedOption" collapse-tags @change="selected">
-        <el-option v-for="option in options" :key="option.id" :label="option.title" :value="option.id"></el-option>
-        </el-select>
-        </el-form-item>
         <el-form-item style="text-align: right;">
           <el-button type="primary" @click="submitForm('formInfo')">确定</el-button>
           <el-button @click="closeDialog(0)">取消</el-button>
@@ -37,7 +25,7 @@
 </template>
  
 <script>
-import { updateCategory,addCategory,getMuneList,getCategories } from '@/api/table'
+import { insertType,modifyType } from '@/api/type'
 
 export default {
   name: "DialogComponent",
@@ -75,28 +63,8 @@ export default {
     };
   },
   mounted() {
-    this.getCategory();
-    this.getOpt();
   },
   methods: {
-    //   获取下拉框
-    getOpt() {
-      getMuneList().then(resp=>{
-        this.options = resp.data
-        console.log(this.options)
-      })
-    },
-    getCategory(){
-      getCategories().then(resp=>{
-        this.categories = resp.data
-        console.log(this.categories)
-      })
-    },
-    selected(val){
-      this.selectedOption = val
-      this.formInfo.menu_id = val
-      console.log("catagory selected value"+val)
-    },
     // 保存操作
     submitForm(formName) {
       const that = this;
@@ -105,7 +73,7 @@ export default {
         if (valid) {
           if (this.formInfo.is_add == true){
             this.formInfo.types = JSON.stringify(this.types)
-            addCategory(this.formInfo).then(response => {
+            insertType(this.formInfo).then(response => {
               this.list = response.data
               this.listLoading = false
               that.$message({
@@ -117,7 +85,7 @@ export default {
         }else {
           console.log("update",this.types.join(","))
           this.formInfo.types =  this.types.join(",")
-          updateCategory(this.formInfo).then(response => {
+          modifyType(this.formInfo).then(response => {
               this.list = response.data
               this.listLoading = false
               that.$message({

@@ -2,17 +2,20 @@
   <div class="app-container">
     <el-row :gutter="20">
       <el-col :span="6"><el-button type="primary" size="small" @click="addItem">新加</el-button></el-col>
-      <el-col :span="6"> <el-input v-model="title" label="搜索"></el-input></el-col>
-      <el-col :span="6"><el-button type="primary" size="small" @click="search">标题搜索</el-button></el-col>
+      <el-select multiple v-model="selectedOption" collapse-tags @change="selected" placeholder="选择类型">
+        <el-option v-for="option in options" :key="option.id" :label="option.desc" :value="option.id"></el-option>
+      </el-select>
     </el-row>
     <el-table
       v-loading="listLoading"
       :data="list"
-      style="width: 100%; margin-top: 20px;"
       element-loading-text="Loading"
       border
       fit
       highlight-current-row
+      lazy
+      :load="load"
+      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
       <el-table-column align="center" label="ID" width="95">
         <template slot-scope="scope">
@@ -24,45 +27,47 @@
           {{ scope.row.title }}
         </template>
       </el-table-column>
-      <el-table-column label="Url">
+      <el-table-column label="TitleEN">
         <template slot-scope="scope">
-          {{ scope.row.url }}
+          {{ scope.row.title_en }}
         </template>
       </el-table-column>
-      <el-table-column label="描述" align="center">
+      <el-table-column label="Desc">
         <template slot-scope="scope">
           {{ scope.row.desc }}
         </template>
       </el-table-column>
-      <el-table-column label="作者" align="center" width="160">
+      <el-table-column label="Role" width="110" align="center">
         <template slot-scope="scope">
-          {{ scope.row.actor }}
+          <span>{{ scope.row.role}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="电影的年份" align="center" width="60">
+      <el-table-column label="Position" width="110" align="center">
         <template slot-scope="scope">
-          {{ scope.row.years }}
+          {{ scope.row.position}}
         </template>
       </el-table-column>
-      <el-table-column label="电影的评分" align="center" width="60">
+      <el-table-column class-name="status-col" label="图片url" width="110" align="center">
         <template slot-scope="scope">
-          {{ scope.row.rate }}
+          {{ scope.row.status}}
         </template>
       </el-table-column>
-      <el-table-column label="封面图片" width="110" align="center">
+      <el-table-column align="center" prop="created_at" label="Display_time" width="200">
         <template slot-scope="scope">
-          <span>{{ scope.row.theme_url }}</span>
+          <span>{{ scope.row.created_at }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="100">
+      
+      
+      <el-table-column label="操作">
       <template slot-scope="scope">
         <el-button
           size="mini"
-          @click="handleEdit( scope.row,0)">编辑</el-button>
+          @click="handleEdit(scope.row,0)">编辑</el-button>
         <el-button
           size="mini"
           type="danger"
-          @click="handleEdit( scope.row,1)">删除</el-button>
+          @click="handleEdit(scope.row,1)">删除</el-button>
       </template>
     </el-table-column>
     </el-table>
@@ -77,9 +82,8 @@
 </template>
 
 <script>
-import { getList,deleteBillboard,searchBillboardByTitle } from '@/api/table'
+import { getMuneList,deleteMune,getMuneListById } from '@/api/table'
 import DialogComponent from "./content.vue";
-
 export default {
   filters: {
     statusFilter(status) {
@@ -97,16 +101,38 @@ export default {
       list: null,
       listLoading: true,
       showDialog: false,
-      title:null,
+      title:"",
+      selectedOption:[],
+      options:[]
     }
   },
   created() {
     this.fetchData()
+    this.load()
   },
   methods: {
     fetchData() {
       this.listLoading = true
-      getList().then(response => {
+      getMuneList().then(response => {
+        console.log(response)
+        this.list = response.data
+        this.listLoading = false
+      })
+    },
+    load(){
+      getMuneListById({"id":0}).then(response => {
+        console.log(response)
+        this.options = response.data
+        this.listLoading = false
+      })
+    },
+    selected(val){
+      var temp = []
+      val.forEach(e => {
+        temp.push(e)
+      });
+      console.log(temp)
+      getMuneListById({"id":val.toString()}).then(response => {
         console.log(response)
         this.list = response.data
         this.listLoading = false
@@ -114,47 +140,11 @@ export default {
     },
     handleDelete(id,data){
       console.log('id-->>'+id+'data--->>'+data)
-      deleteBillboard({'id':data.id}).then(response => {
+      deleteMune({'id':data.id}).then(response => {
         console.log(response)
         this.fetchData()
       })
     },
-          // 编辑操作
-      handleEdit(row,state) {
-        if(state==0){
-          row.isDel=0
-          row.is_add=false
-          this.tableItem = row;
-          this.dialogTitle = "编辑数据";
-          this.showDialog = true;
-          this.$nextTick(() => {
-              this.$refs["dialogComponent"].showDialog = true;
-          });
-        }else{
-            this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-             row.isDel=1
-             this.tableItem = row;
-
-             deleteBillboard({'id':row.id}).then(response => {
-                console.log(response)
-                this.$message({
-                  type: 'success',
-                  message: '删除成功!'
-                  });
-                this.fetchData()
-              })
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消删除'
-            });          
-          });
-        }
-      },
     closeDialog(flag) {
         if (flag) {
           // 重新刷新表格内容
@@ -162,20 +152,50 @@ export default {
         }
         this.showDialog = false;
       },
-      addItem() {
+    handleEdit(row,state) {
+      if(state==0){
+        row.isDel=0
+        row.is_add=false
+        this.tableItem = row;
+        this.dialogTitle = "编辑数据";
+        this.showDialog = true;
+        this.$nextTick(() => {
+            this.$refs["dialogComponent"].showDialog = true;
+        });
+      }else{
+          this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+            row.isDel=1
+            this.tableItem = row;
+
+            deleteBillboard({'id':row.id}).then(response => {
+              console.log(response)
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+                });
+              this.fetchData()
+            })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+      }
+    },
+    addItem() {
         
         this.tableItem = {
           title:'',
-          url: '',
-          theme_url:'',
-          id:0,
+          role:0,
           desc:"",
-          category:"",
-          actor:"",
-          types:null,
-          author:"admin",
+          position:0,
           is_add:true,
-          rate:"0.0"
+          title_en:''
         };
         this.dialogTitle = "添加新数据";
         this.showDialog = true;
@@ -196,8 +216,3 @@ export default {
   }
 }
 </script>
-<style scoped lang="scss">
-.app-container {
-  padding: 20px;
-}
-</style>

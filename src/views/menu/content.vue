@@ -17,15 +17,6 @@
         </el-form-item>
         <el-form-item label="分类描述：" prop="desc" required>
           <el-input v-model="formInfo.desc"></el-input>
-
-          <!-- <el-select v-model="formInfo.index" placeholder="请选择分类"> -->
-            <!-- <el-option
-              v-for="item in options"
-              :key="item.id"
-              :label="item.classifyType"
-              :value="item.id"
-            ></el-option> -->
-          <!-- </el-select> -->
         </el-form-item>
         <el-form-item label="分类权限：" prop="role" required>
           <el-input type="number" v-model.number="formInfo.role"></el-input>

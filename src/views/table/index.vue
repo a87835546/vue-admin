@@ -170,7 +170,7 @@ export default {
           theme_url:'',
           id:0,
           desc:"",
-          category:"",
+          category_id:0,
           actor:"",
           types:null,
           author:"admin",

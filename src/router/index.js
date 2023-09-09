@@ -76,16 +76,16 @@ export const constantRoutes = [
       },
       {
         path: 'info',
-        name: '详细的分类配置',
+        name: '目录的分类配置',
         component: () => import('@/views/category/index'),
-        meta: { title: '详细的分类配置', icon: 'table' }
+        meta: { title: '目录的分类配置', icon: 'table' }
       },
-      // {
-      //   path: 'list',
-      //   name: '所有的配置信息',
-      //   component: () => import('@/views/app-config/list'),
-      //   meta: { title: '所有的配置信息', icon: 'table' }
-      // },
+      {
+        path: 'list',
+        name: '电影的分类',
+        component: () => import('@/views/type/index'),
+        meta: { title: '电影的分类', icon: 'table' }
+      },
       {
         path: 'superstar',
         name: '所有的配置信息',

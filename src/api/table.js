@@ -9,7 +9,7 @@ export function getList(params) {
 }
 export function getMuneList(params) {
   return request({
-    url: '/menu/all',
+    url: '/menu/list',
     method: 'get',
     params
   })

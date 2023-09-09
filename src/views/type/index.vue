@@ -2,15 +2,12 @@
   <div class="app-container">
     <el-row :gutter="20">
       <el-col :span="6"><el-button type="primary" size="small" @click="addItem">新加</el-button></el-col>
-      <el-select multiple v-model="selectedOption" collapse-tags @change="selected">
-        <el-option v-for="option in options" :key="option.id" :label="option.desc" :value="option.id"></el-option>
-      </el-select>
       <el-col :span="6"> <el-input v-model="title" label="搜索"></el-input></el-col>
       <el-col :span="6"><el-button type="primary" size="small" @click="search">标题搜索</el-button></el-col>
     </el-row>
     <el-table
       v-loading="listLoading"
-      :data="list"
+      :data="types"
       element-loading-text="Loading"
       border
       fit
@@ -32,21 +29,6 @@
       <el-table-column label="TitleEN">
         <template slot-scope="scope">
           {{ scope.row.title_en }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Desc">
-        <template slot-scope="scope">
-          {{ scope.row.desc }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Role" width="110" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.role}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column class-name="status-col" label="Status" width="110" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.status==1?"禁用":"正常" }}
         </template>
       </el-table-column>
       <el-table-column align="center" prop="created_at" label="Display_time" width="200">
@@ -77,10 +59,10 @@
       ></dialog-component>
   </div>
 </template>
-
 <script>
-import { getMuneList,deleteMune,getMuneListById } from '@/api/table'
+import { getTypes,getSubCategories } from '@/api/table'
 import DialogComponent from "./content.vue";
+
 export default {
   filters: {
     statusFilter(status) {
@@ -95,53 +77,84 @@ export default {
   components: { DialogComponent },
   data() {
     return {
-      list: null,
       listLoading: true,
       showDialog: false,
-      title:"",
-      selectedOption:[],
+      title:null,
+      types:[],
       options:[]
-    }
+      }
+    
   },
   created() {
-    this.fetchData()
-    this.load()
+    this.getTypes()
   },
   methods: {
     fetchData() {
-      this.listLoading = true
-      getMuneList().then(response => {
-        console.log(response)
-        this.list = response.data
+      this.getTypes();
+    },
+ 
+    getTypes(){
+      getTypes().then(resp=>{
+        this.types = resp.data
         this.listLoading = false
+        console.log("category--->>>",this.categories)
+
       })
     },
-    load(){
-      getMuneListById({"id":0}).then(response => {
-        console.log(response)
-        this.options = response.data
+    getSubCategory(id){
+      getSubCategories({'id':id}).then(resp=>{
+        console.log("sub category",id)
+        if(resp.data!=null){
+          this.subcategories = resp.data
+        }
         this.listLoading = false
-      })
-    },
-    selected(val){
-      var temp = []
-      val.forEach(e => {
-        temp.push(e)
-      });
-      console.log(temp)
-      getMuneListById({"id":val.toString()}).then(response => {
-        console.log(response)
-        this.list = response.data
-        this.listLoading = false
+        console.log("sub category--->>>",this.subcategories)
+
       })
     },
     handleDelete(id,data){
       console.log('id-->>'+id+'data--->>'+data)
-      deleteMune({'id':data.id}).then(response => {
+      deleteBillboard({'id':data.id}).then(response => {
         console.log(response)
         this.fetchData()
       })
     },
+          // 编辑操作
+      handleEdit(row,state) {
+        if(state==0){
+          row.isDel=0
+          row.is_add=false
+          this.tableItem = row;
+          this.dialogTitle = "编辑数据";
+          this.showDialog = true;
+          this.$nextTick(() => {
+              this.$refs["dialogComponent"].showDialog = true;
+          });
+        }else{
+            this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+             row.isDel=1
+             this.tableItem = row;
+
+             deleteBillboard({'id':row.id}).then(response => {
+                console.log(response)
+                this.$message({
+                  type: 'success',
+                  message: '删除成功!'
+                  });
+                this.fetchData()
+              })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });          
+          });
+        }
+      },
     closeDialog(flag) {
         if (flag) {
           // 重新刷新表格内容
@@ -149,49 +162,12 @@ export default {
         }
         this.showDialog = false;
       },
-    handleEdit(row,state) {
-      if(state==0){
-        row.isDel=0
-        row.is_add=false
-        this.tableItem = row;
-        this.dialogTitle = "编辑数据";
-        this.showDialog = true;
-        this.$nextTick(() => {
-            this.$refs["dialogComponent"].showDialog = true;
-        });
-      }else{
-          this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-            row.isDel=1
-            this.tableItem = row;
-
-            deleteBillboard({'id':row.id}).then(response => {
-              console.log(response)
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-                });
-              this.fetchData()
-            })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-        });
-      }
-    },
-    addItem() {
-      
+      addItem() {
         this.tableItem = {
           title:'',
-          role:0,
-          desc:"",
+          title_en:'',
+          author:"admin",
           is_add:true,
-          title_en:''
         };
         this.dialogTitle = "添加新数据";
         this.showDialog = true;
@@ -208,7 +184,20 @@ export default {
             });
           this.fetchData()
         })
+      },
+      load(row, treeNode, resolve) {
+        this.getSubCategory(row.id)
+        console.log("id--->",this.subcategories)
+        setTimeout(() => {
+          resolve(this.subcategories)
+        }, 1000);
       }
+      
   }
 }
 </script>
+<style scoped lang="scss">
+.app-container {
+  padding: 20px;
+}
+</style>

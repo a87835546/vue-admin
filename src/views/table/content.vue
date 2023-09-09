@@ -35,8 +35,8 @@
             <el-option
               v-for="item in options"
               :key="item.id"
-              :label="item.classifyType"
-              :value="item.title"
+              :label="item.title"
+              :value="item.id"
             ></el-option>
           </el-select>
       </el-form-item>
@@ -61,6 +61,7 @@
  
 <script>
 import { addBillboard,updateBillboard,getCategories,getMuneList } from '@/api/table'
+import { getTypes } from '@/api/table'
 
 export default {
   name: "DialogComponent",
@@ -110,14 +111,14 @@ export default {
       delete this.types[0]
       console.log(this.types)
     },
-    test(){
-      console.log(this.types)
+    test(val){
+      console.log(val)
       this.formInfo.types = this.types.join(",")
       console.log(this.formInfo.types )
     },
     //   获取下拉框
     getOpt() {
-      getCategories().then(resp=>{
+      getTypes().then(resp=>{
         this.options = resp.data
         console.log(this.options)
       })
