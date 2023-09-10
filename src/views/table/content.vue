@@ -36,17 +36,27 @@
               v-for="item in options"
               :key="item.id"
               :label="item.title"
-              :value="item.id"
+              :value="item.title"
             ></el-option>
           </el-select>
       </el-form-item>
-      <el-form-item  label="视频的分类：" prop="menu"  >
-        <el-select v-model="formInfo.category_id" placeholder="例如电视剧，电影"  @change="changedMenu">
+      <el-form-item  label="视频的主分类：" prop="menu"  >
+        <el-select v-model="formInfo.menu_title" placeholder="例如电视剧，电影"  @change="changedMenu">
+            <el-option
+              v-for="item in menus"
+              :key="item.id"
+              :label="item.title"
+              :value="item"
+            ></el-option>
+          </el-select>
+      </el-form-item>
+      <el-form-item  label="视频的子分类：" prop="category"  >
+        <el-select v-model="category" placeholder="例如电视剧，电影"  @change="selectedCategory">
             <el-option
               v-for="item in categories"
               :key="item.id"
               :label="item.title"
-              :value="item.title"
+              :value="item"
             ></el-option>
           </el-select>
       </el-form-item>
@@ -60,7 +70,7 @@
 </template>
  
 <script>
-import { addBillboard,updateBillboard,getMuneList } from '@/api/table'
+import { addBillboard,updateBillboard,getMuneList,getCategoryMuneList } from '@/api/table'
 import { getTypes } from '@/api/table'
 
 export default {
@@ -91,6 +101,7 @@ export default {
           ],
       },
       options:[],
+      menus:null,
       categories:null,
       types:[],
       category:"",
@@ -99,26 +110,26 @@ export default {
     };
   },
   mounted() {
-    this.getCategory();
+    this.getMenu();
     this.getOpt();
     this.parserSelect();
   },
   methods: {
     parserSelect(){
       console.log(this.formInfo.types )
-      this.formInfo.types.trim()
-      this.types= this.formInfo.types.split(",")
-      delete this.types[0]
-      console.log(this.types)
     },
     test(val){
-      console.log(val)
+      console.log("change types --->>",val)
       this.formInfo.types = this.types.join(",")
-      this.formInfo.category_id = val.toString()
     },
     changedMenu(val){
       console.log("changed menu -->>",val)
-      this.formInfo.menu_title = val
+      this.formInfo.menu_title = val.title
+      this.getMenuCategory(val.id)
+    },
+    selectedCategory(val){
+      console.log("changed category menu -->>",val)
+      this.formInfo.category_id = val.id
     },
     //   获取下拉框
     getOpt() {
@@ -127,14 +138,24 @@ export default {
         console.log(this.options)
       })
     },
-    getCategory(){
+    getMenu(){
       getMuneList().then(resp=>{
         if(resp.data == []){
-          this.categories = null
+          this.menus = []
+        }else{
+          this.menus = resp.data
+        }
+        console.log(this.menus)
+      })
+    },
+    getMenuCategory(id){
+      getCategoryMuneList(id).then(resp=>{
+        if(resp.data == []){
+          this.categories = []
         }else{
           this.categories = resp.data
         }
-        console.log(this.categories)
+        console.log(this.menus)
       })
     },
     // 保存操作

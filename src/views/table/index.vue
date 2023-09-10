@@ -172,7 +172,7 @@ export default {
           desc:"",
           category_id:0,
           actor:"",
-          types:null,
+          types:[],
           author:"admin",
           is_add:true,
           rate:"0.0",

@@ -21,7 +21,12 @@ export function getMuneListById(params) {
     params
   })
 }
-
+export function getCategoryMuneList(id) {
+  return request({
+    url: '/category/queryList?id='+id,
+    method: 'get',
+  })
+}
 export function addMune(data) {
   return request({
     url: '/menu/insert',
