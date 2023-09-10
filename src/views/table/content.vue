@@ -129,6 +129,7 @@ export default {
     },
     selectedCategory(val){
       console.log("changed category menu -->>",val)
+      this.category = val.title
       this.formInfo.category_id = val.id
     },
     //   获取下拉框
