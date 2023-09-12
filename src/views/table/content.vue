@@ -5,16 +5,25 @@
       :title="dialogTitle"
       class="dialog-component"
       :visible.sync="showDialog"
-      width="500px"
+      width="600px"
       @close="closeDialog(0)"
     >
-      <el-form ref="formInfo" :rules="rules" :model="formInfo" class="demo-form-inline" label-width="100px">
+      <el-form ref="formInfo" :rules="rules" :model="formInfo" class="demo-form-inline" label-width="150px">
         <el-form-item label="视频标题：" prop="title" required>
           <el-input v-model="formInfo.title"></el-input>
         </el-form-item>
         <el-form-item label="视频链接：" prop="url" required>
           <el-input v-model="formInfo.url"></el-input>
+          <!-- <el-button @click="addDomain">连续剧添加多个url</el-button> -->
         </el-form-item>
+        <!-- <el-form-item
+        v-for="(url, index) in urls"
+        :label="'url' + index+1"
+        :key="url.key"
+        prop="urls_prop"
+      >
+    <el-input v-model="url.val" @change="urlsChanged"></el-input><el-button @click.prevent="removeDomain(url)">删除</el-button>
+  </el-form-item> -->
         <el-form-item label="描述：" prop="desc" required>
           <el-input v-model="formInfo.desc"></el-input>
         </el-form-item>
@@ -104,6 +113,8 @@ export default {
       menus:null,
       categories:null,
       types:[],
+      urls:[],
+      url:'',
       category:"",
       showDialog: false,
       formInfo: JSON.parse(JSON.stringify(this.itemInfo))
@@ -132,6 +143,27 @@ export default {
       this.category = val.title
       this.formInfo.category_id = val.id
     },
+    urlsChanged(val){
+      console.log("input value--->",val)
+      this.urls.push({
+          value: val,
+          key: Date.now()
+        });
+        console.log("input value--->",this.urls)
+        this.formInfo.urls.push(val.value)
+    },
+    addDomain(url) {
+        this.urls.push({
+          value: url,
+          key: Date.now()
+        });
+      },
+      removeDomain(item) {
+        var index = this.urls.indexOf(item)
+        if (index !== -1) {
+          this.urls.splice(index, 1)
+        }
+      },
     //   获取下拉框
     getOpt() {
       getTypes().then(resp=>{
@@ -163,6 +195,8 @@ export default {
     submitForm(formName) {
       const that = this;
       console.log("submit-->>>>",JSON.stringify(this.formInfo))
+      this.formInfo.urls.unshift(this.formInfo.url)
+      console.log("urls -->>",this.urls)
       that.$refs[formName].validate(valid => {
         if (valid) {
           if (this.formInfo.is_add == true){

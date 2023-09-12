@@ -167,6 +167,7 @@ export default {
         this.tableItem = {
           title:'',
           url: '',
+          urls:[],
           theme_url:'',
           id:0,
           desc:"",

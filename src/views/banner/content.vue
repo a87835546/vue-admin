@@ -39,7 +39,7 @@
 </template>
  
 <script>
-import { addBanner,updateBanner,getCategories,getMuneList } from '@/api/table'
+import { addBanner,updateBanner,getMuneList } from '@/api/table'
 
 export default {
   name: "DialogComponent",
@@ -70,16 +70,12 @@ export default {
       },
       options:[],
       selectedOption:0,
-      categories:null,
-      types:[],
-      category:"电影",
       showDialog: false,
       formInfo: JSON.parse(JSON.stringify(this.itemInfo))
     };
   },
   mounted() {
-    this.getCategory();
-    this.getCategory();
+    this.getMuneList();
     this.getOpt();
     this.parserSelect();
   },
@@ -112,16 +108,6 @@ export default {
       getCategories().then(resp=>{
         this.options = resp.data
         console.log(this.options)
-      })
-    },
-    getCategory(){
-      getMuneList().then(resp=>{
-        if(resp.data == []){
-          this.categories = null
-        }else{
-          this.categories = resp.data
-        }
-        console.log(this.categories)
       })
     },
     // 保存操作
