@@ -10,32 +10,39 @@
       :data="list"
       style="width: 100%; margin-top: 20px;"
       element-loading-text="Loading"
-      border
+      border="true"
       fit
-      highlight-current-row
+      highlight-current-row="true"
+      stripe="true"
     >
-      <el-table-column align="center" label="ID" width="95">
+      <!-- <el-table-column align="center" label="ID" width="50">
         <template slot-scope="scope">
           {{ scope.row.id }}
         </template>
-      </el-table-column>
-      <el-table-column label="Title">
+      </el-table-column> -->
+      <el-table-column label="Title" width="100px">
         <template slot-scope="scope">
           {{ scope.row.title }}
         </template>
       </el-table-column>
-      <el-table-column label="Url">
+      <el-table-column label="封面图片" width="300" align="center">
+        <template slot-scope="scope">
+          <!-- <span>{{ scope.row.theme_url }}</span> -->
+          <img :src=scope.row.theme_url > 
+        </template>
+      </el-table-column>
+      <el-table-column label="Url" width="100">
         <template slot-scope="scope">
           {{ scope.row.url }}
         </template>
       </el-table-column>
       <el-table-column label="描述" align="center">
-        <template slot-scope="scope">
+        <template slot-scope="scope" class="myNote">
           {{ scope.row.desc }}
         </template>
       </el-table-column>
-      <el-table-column label="作者" align="center" width="160">
-        <template slot-scope="scope">
+      <el-table-column label="作者" align="center" width="100">
+        <template slot-scope="scope" class="myNote">
           {{ scope.row.actor }}
         </template>
       </el-table-column>
@@ -47,11 +54,6 @@
       <el-table-column label="电影的评分" align="center" width="60">
         <template slot-scope="scope">
           {{ scope.row.rate }}
-        </template>
-      </el-table-column>
-      <el-table-column label="封面图片" width="110" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.theme_url }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="100">
@@ -66,6 +68,11 @@
       </template>
     </el-table-column>
     </el-table>
+    <el-pagination
+    align="center"
+    layout="prev, pager, next"
+    :total="1000">
+  </el-pagination>
     <dialog-component
         v-if="showDialog"
         ref="dialogComponent"
@@ -202,4 +209,12 @@ export default {
 .app-container {
   padding: 20px;
 }
+.myNote{
+  display:-webkit-box;
+  text-overflow:ellipsis;
+  overflow:hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient:vertical;
+}
+
 </style>
