@@ -27,6 +27,13 @@ export function getCategoryMuneList(id) {
     method: 'get',
   })
 }
+
+export function getCMuneList(id) {
+  return request({
+    url: '/category/menu/list?ids='+id,
+    method: 'get',
+  })
+}
 export function addMune(data) {
   return request({
     url: '/menu/insert',
@@ -95,11 +102,10 @@ export function getCategories() {
   })
 }
 
-export function getSubCategories(data) {
+export function getSubCategories(ids) {
   return request({
-    url: '/category/queryList',
-    method: 'post',
-    data
+    url: '/category/queryList?id='+ids,
+    method: 'get',
   })
 }
 export function addCategory(data) {

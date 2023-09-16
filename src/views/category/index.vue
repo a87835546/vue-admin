@@ -24,17 +24,17 @@
           {{ scope.row.id }}
         </template>
       </el-table-column>
-      <el-table-column label="Title">
+      <el-table-column label="标题">
         <template slot-scope="scope">
           {{ scope.row.title }}
         </template>
       </el-table-column>
-      <el-table-column label="TitleEN">
+      <el-table-column label="英语标题">
         <template slot-scope="scope">
           {{ scope.row.title_en }}
         </template>
       </el-table-column>
-      <el-table-column label="Desc">
+      <el-table-column label="描述">
         <template slot-scope="scope">
           {{ scope.row.desc }}
         </template>
@@ -49,11 +49,11 @@
           {{ scope.row.status==1?"禁用":"正常" }}
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="created_at" label="Display_time" width="200">
+      <!-- <el-table-column align="center" prop="created_at" label="Display_time" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       
       
       <el-table-column label="操作">
@@ -78,7 +78,7 @@
   </div>
 </template>
 <script>
-import { getCategories,getSubCategories,getMuneList } from '@/api/table'
+import { getCategories,getMuneList,getSubCategories } from '@/api/table'
 
 import DialogComponent from "./content.vue";
 
@@ -100,19 +100,21 @@ export default {
       showDialog: false,
       title:null,
       categories:[],
-      options:[]
+      options:[],
+      selectedOption:""
       }
     
   },
   created() {
     this.getCategory()
-    this.selected()
+    this.getMenuList()
   },
   methods: {
     fetchData() {
       this.getCategory();
     },
-    selected(){
+    getMenuList(val){
+      console.log("select category menu ",val)
       getMuneList().then(response => {
         console.log(response)
         this.options = response.data
@@ -127,15 +129,12 @@ export default {
 
       })
     },
-    getSubCategory(id){
-      getSubCategories({'id':id}).then(resp=>{
-        console.log("sub category",id)
-        if(resp.data!=null){
-          this.subcategories = resp.data
-        }
+    selected(id){
+      console.log(id)
+      getSubCategories(this.selectedOption).then(response => {
+        console.log(response)
+        this.categories = response.data
         this.listLoading = false
-        console.log("sub category--->>>",this.subcategories)
-
       })
     },
     handleDelete(id,data){

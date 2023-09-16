@@ -20,7 +20,7 @@
           {{ scope.row.id }}
         </template>
       </el-table-column> -->
-      <el-table-column label="Title" width="100px">
+      <el-table-column label="标题" width="100px">
         <template slot-scope="scope">
           {{ scope.row.title }}
         </template>
@@ -31,7 +31,7 @@
           <img :src=scope.row.theme_url > 
         </template>
       </el-table-column>
-      <el-table-column label="Url" width="100">
+      <el-table-column label="电影链接" width="100">
         <template slot-scope="scope">
           {{ scope.row.url }}
         </template>

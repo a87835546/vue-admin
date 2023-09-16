@@ -21,21 +21,21 @@
           {{ scope.row.id }}
         </template>
       </el-table-column>
-      <el-table-column label="Title">
+      <el-table-column label="标题">
         <template slot-scope="scope">
           {{ scope.row.title }}
         </template>
       </el-table-column>
-      <el-table-column label="TitleEN">
+      <el-table-column label="英语标题">
         <template slot-scope="scope">
           {{ scope.row.title_en }}
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="created_at" label="Display_time" width="200">
+      <!-- <el-table-column align="center" prop="created_at" label="Display_time" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       
       
       <el-table-column label="操作">

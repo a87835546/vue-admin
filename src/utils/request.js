@@ -6,8 +6,8 @@ import { getToken } from '@/utils/auth'
 // create an axios instance
 const service = axios.create({
   // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  // baseURL:'http://160.251.52.178:8080/api/v1',
-  baseURL:'http://13.213.40.209:8080/api/v1',
+  // baseURL:'http://0.0.0.0:8080/api/v1',
+  baseURL:'http://46.137.238.56:8080/api/v1',
   timeout: 5000 ,// request timeout
   headers: {
     'Content-Type': 'application/json',

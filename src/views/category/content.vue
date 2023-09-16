@@ -22,7 +22,7 @@
         <el-form-item label="描述：" prop="desc" required>
           <el-input v-model="formInfo.desc"></el-input>
         </el-form-item>
-        <el-form-item label="所属目录：" prop="menu_id" required>
+        <el-form-item label="所属目录：" prop="menu_id">
           <el-select v-model="selectedOption" collapse-tags @change="selected">
         <el-option v-for="option in options" :key="option.id" :label="option.title" :value="option.id"></el-option>
         </el-select>
