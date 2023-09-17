@@ -1,10 +1,9 @@
 import request from '@/utils/request'
 
-export function getList(params) {
+export function getList(page,num) {
   return request({
-    url: '/videos/list',
-    method: 'get',
-    params
+    url: '/videos/list?page='+page+"&num="+num,
+    method: 'get'
   })
 }
 export function getMuneList(params) {

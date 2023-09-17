@@ -10,38 +10,32 @@
       :data="list"
       style="width: 100%; margin-top: 20px;"
       element-loading-text="Loading"
-      border="true"
+      border
       fit
-      highlight-current-row="true"
-      stripe="true"
+      highlight-current-row
+      class="tableBox"
     >
-      <!-- <el-table-column align="center" label="ID" width="50">
-        <template slot-scope="scope">
-          {{ scope.row.id }}
-        </template>
-      </el-table-column> -->
-      <el-table-column label="标题" width="100px">
+      <el-table-column label="标题" width="100px" height="100px">
         <template slot-scope="scope">
           {{ scope.row.title }}
         </template>
       </el-table-column>
-      <el-table-column label="封面图片" width="300" align="center">
+      <el-table-column label="封面图片" align="center"  width="100px" height="100px">
         <template slot-scope="scope">
-          <!-- <span>{{ scope.row.theme_url }}</span> -->
-          <img :src=scope.row.theme_url > 
+          <img :src=scope.row.theme_url style="width:100px;height:100px;"> 
         </template>
       </el-table-column>
-      <el-table-column label="电影链接" width="100">
+      <el-table-column label="电影链接" width="100"  height="100px">
         <template slot-scope="scope">
           {{ scope.row.url }}
         </template>
       </el-table-column>
-      <el-table-column label="描述" align="center">
+      <el-table-column label="描述" align="center"  height="100px">
         <template slot-scope="scope" class="myNote">
           {{ scope.row.desc }}
         </template>
       </el-table-column>
-      <el-table-column label="作者" align="center" width="100">
+      <el-table-column label="作者" align="center"  height="100px">
         <template slot-scope="scope" class="myNote">
           {{ scope.row.actor }}
         </template>
@@ -56,7 +50,7 @@
           {{ scope.row.rate }}
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="100">
+      <el-table-column label="操作" width="100" style="height:100px;">
       <template slot-scope="scope">
         <el-button
           size="mini"
@@ -71,6 +65,9 @@
     <el-pagination
     align="center"
     layout="prev, pager, next"
+    @size-change="sizeChange"
+    @current-change="currentChange"
+    :current-page="currentPage"
     :total="1000">
   </el-pagination>
     <dialog-component
@@ -105,6 +102,8 @@ export default {
       listLoading: true,
       showDialog: false,
       title:null,
+      currentPage:1,
+      pageNum:10
     }
   },
   created() {
@@ -113,7 +112,7 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getList().then(response => {
+      getList(this.currentPage,this.pageNum).then(response => {
         console.log(response)
         this.list = response.data
         this.listLoading = false
@@ -125,6 +124,14 @@ export default {
         console.log(response)
         this.fetchData()
       })
+    },
+    sizeChange(val){
+      console.log("size changed "+val)
+    },
+    currentChange(val){
+      this.currentPage = val
+      this.fetchData();
+      console.log("current changed "+val)
     },
           // 编辑操作
       handleEdit(row,state) {
@@ -216,5 +223,18 @@ export default {
   -webkit-line-clamp: 2;
   -webkit-box-orient:vertical;
 }
+
+.tableBox {
+     th {
+       padding: 0 !important;
+       height: 48px;
+       line-height: 48px;
+     }
+     td {
+       padding: 0 !important;
+       height: 48px;
+       line-height: 48px;
+     }
+   }
 
 </style>
